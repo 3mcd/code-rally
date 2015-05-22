@@ -13,7 +13,7 @@ module.exports = {
     value = value || '';
     if (previous === value) return;
     this.el[this.attr] = value.toString();
-    if (this.attr == 'nodeValue') {
+    if (this.attr == 'nodeValue' && this.el == document.activeElement) {
       post = getInputSelection(this.el);
       setInputSelection(this.el, pos.start, pos.end);
     }

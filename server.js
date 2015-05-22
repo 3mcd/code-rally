@@ -20,9 +20,12 @@ app = express();
 app
   .use(express.favicon())
   .use(express.compress())
+  .use(express.static(process.cwd() + '/public'))
   .use(racerBrowserChannel(store))
   .use(store.modelMiddleware())
   .use(app.router);
+
+app.use('/cm', express.static(process.cwd() + '/node_modules/codemirror/'));
 
 app.use(function(err, req, res, next) {
   console.error(err.stack || (new Error(err)).stack);
@@ -63,21 +66,23 @@ app.get('/script.js', function(req, res, next) {
 
 app.get('/model/:roomId', function(req, res, next) {
   var model = req.getModel();
+  var roomId = req.params.roomId;
   
-  if (!/^[a-zA-Z0-9_-]+$/.test(req.params.roomId)) return next();
+  if (!/^[a-zA-Z0-9_-]+$/.test(roomId)) return next();
 
-  var roomPath = 'stores.' + req.params.roomId;
+  var roomPath = 'stores.' + roomId;
 
   model.subscribe(roomPath, function(err) {
     if (err) return next(err);
 
-    var scoped = model.ref('_page.store', roomPath);
+    var scoped = model.ref('_page.room', roomPath);
 
     if (!scoped.get()) {
       scoped.set({
-        name: '',
-        html: '',
-        fruits: []
+        name: roomId,
+        editors: [
+          { name: 'html', mode: 'text/html', text: '<p>Test</p>' }
+        ]
       });
     }
 
