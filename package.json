@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "codemirror": "^5.3.0",
+    "director": "^1.2.8",
     "express": "^3.4.8",
     "handlebars": "^1.3.0",
     "livedb-mongo": "^0.3.4",
@@ -17,6 +18,8 @@
     "racer-browserchannel": "^0.3.0",
     "racer-bundle": "^0.1.1",
     "redis": "^0.10.3",
+    "router": "git://github.com/tildeio/router.js",
+    "rsvp": "^3.0.18",
     "superagent": "^1.2.0",
     "vue": "^0.11.10",
     "vueify": "^1.1.5"

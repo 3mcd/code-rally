@@ -15,12 +15,13 @@
 
 <script>
   module.exports = {
+    inherit: true,
     ready: function () {
       this.select = this.$el.querySelector('select');
     },
     methods: {
       onModeChange: function (e) {
-        this.$data.$model.set('mode', this.select.value);
+        this.model.set('mode', this.select.value);
       }
     }
   };

@@ -13,16 +13,23 @@
 </style>
 
 <template>
+  <a href="/rooms/home">Home</a>
   <div class="cr-App">
-    <h3>{{room.name}}</h3>
-    <cr-code-editor v-with="room.editors[0]"></cr-code-editor>
+    <div v-component="{{view}}" v-with="params:params" v-transition></div>
   </div>
 </template>
 
 <script type="text/javascript">
   module.exports = {
+    data: {
+      view: '',
+      params: {}
+    },
     components: {
-      'cr-code-editor': require('./cr-code-editor.vue')
+      /**
+       * Register all top-level components
+       */
+      'room': require('./cr-room.vue')
     }
   };
 </script>

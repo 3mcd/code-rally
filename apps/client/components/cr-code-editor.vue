@@ -5,7 +5,8 @@
 
 <template>
   <div class="cr-CodeEditor">
-    <cr-code-editor-bar v-with="$data"></cr-code-editor-bar>
+    <button v-on="click: deleteClicked">Delete</button>
+    <cr-code-editor-bar></cr-code-editor-bar>
     <textarea v-el="editor">{{text}}</textarea>
   </div>
 </template>
@@ -62,7 +63,7 @@
       },
       cmDomHandler: function(cm, change) {
         var debounce;
-        var model = this.$data.$model;
+        var model = this.model;
 
         if (this.supress) return;
 
@@ -90,10 +91,18 @@
         }
       },
       onModeChange: function () {
-        this.updateMode(this.mode);
+        this.updateMode(this.$data.mode);
+      },
+      deleteClicked: function (e) {
+        this.deleteEditor();
+      },
+      deleteEditor: function () {
+        this.model.remove();
       }
     },
     ready: function () {
+      this.model = this.$parent.model.at('editors.' + this.$index);
+
       var cm = this.cm = CodeMirror.fromTextArea(this.$$.editor, {
         lineNumbers: true,
         tabSize: 2,
@@ -107,12 +116,12 @@
       _.bindAll(this, 'cmModelHandler', 'cmDomHandler');
 
       this.unwatchMode = this.$watch('mode', this.onModeChange);
-      this.$data.$model.on('change', 'text', this.cmModelHandler.bind(this));
+      this.model.on('change', 'editor.text', this.cmModelHandler.bind(this));
       cm.on('change', this.cmDomHandler);
     },
     detached: function () {
       this.unwatchMode();
-      this.$data.$model.removeEventListener(this.cmModelHandler);
+      this.model.removeEventListener(this.cmModelHandler);
       this.cm.off('change', this.cmDomHandler);
     }
   };
