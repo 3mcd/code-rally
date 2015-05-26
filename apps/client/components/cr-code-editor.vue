@@ -94,9 +94,9 @@
         this.updateMode(this.$data.mode);
       },
       deleteClicked: function (e) {
-        this.deleteEditor();
+        this.removeEditor();
       },
-      deleteEditor: function () {
+      removeEditor: function () {
         this.model.remove();
       }
     },

@@ -1,5 +1,7 @@
 <style lang="stylus">
+  .cr-Room {
 
+  }
 </style>
 
 <template>
@@ -17,7 +19,6 @@
   module.exports = {
     data: function () {
       return {
-        model: null,
         room: {
           name: null,
           editors: []
