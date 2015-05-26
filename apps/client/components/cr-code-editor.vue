@@ -1,13 +1,17 @@
 <style lang="stylus">
+  .CodeMirror
+    height 150px
+    font-family "Pragmata Pro"
+    font-size 13px
+
   .cr-CodeEditor
-    color #f00
+    width 100%
 </style>
 
 <template>
   <div class="cr-CodeEditor">
-    <button v-on="click: deleteClicked">Delete</button>
-    <cr-code-editor-bar></cr-code-editor-bar>
-    <textarea v-el="editor">{{text}}</textarea>
+    <cr-code-editor-bar editor="{{editor}}" room="{{room}}"></cr-code-editor-bar>
+    <textarea v-el="editor">{{editor.text}}</textarea>
   </div>
 </template>
 
@@ -19,12 +23,13 @@
     components: {
       'cr-code-editor-bar': require('./cr-code-editor-bar.vue')
     },
+    paramAttributes: ['editor', 'room'],
     methods: {
       check: function () {
         var _this = this;
         setTimeout(function () {
           var cmText = _this.cm.getValue();
-          var otText = _this.model.get('text') || '';
+          var otText = _this.editor.$model.get('text') || '';
           var cursor = _this.cm.getCursor();
 
           if (cmText != otText) {
@@ -53,7 +58,6 @@
           cm.replaceRange('', from, to);
           this.supress = false;
         } else {
-          // using model.setDiff doesnt provide stringInsert and stringRemove, just changes the text
           var cursor = this.cm.getCursor();
           this.supress = true;
           this.cm.setValue(newVal);
@@ -63,7 +67,7 @@
       },
       cmDomHandler: function(cm, change) {
         var debounce;
-        var model = this.model;
+        var model = this.editor.$model;
 
         if (this.supress) return;
 
@@ -91,37 +95,30 @@
         }
       },
       onModeChange: function () {
-        this.updateMode(this.$data.mode);
-      },
-      deleteClicked: function (e) {
-        this.removeEditor();
-      },
-      removeEditor: function () {
-        this.model.remove();
+        this.updateMode(this.$data.editor.mode);
       }
     },
     ready: function () {
-      this.model = this.$parent.model.at('editors.' + this.$index);
-
       var cm = this.cm = CodeMirror.fromTextArea(this.$$.editor, {
         lineNumbers: true,
         tabSize: 2,
         extraKeys: {
           'Tab': function (cm) { cm.execCommand('insertSoftTab'); }
-        }
+        },
+        theme: 'base16-ocean-light'
       });
 
-      this.updateMode(this.mode);
+      this.updateMode(this.editor.mode);
 
       _.bindAll(this, 'cmModelHandler', 'cmDomHandler');
 
-      this.unwatchMode = this.$watch('mode', this.onModeChange);
-      this.model.on('change', 'editor.text', this.cmModelHandler.bind(this));
+      this.$watch('editor.mode', this.onModeChange);
+      this.editor.$model.on('change', 'text', this.cmModelHandler);
       cm.on('change', this.cmDomHandler);
     },
     detached: function () {
-      this.unwatchMode();
-      this.model.removeEventListener(this.cmModelHandler);
+      // Throws an error (why?):
+      // this.editor.$model.removeListener('change', this.cmModelHandler);
       this.cm.off('change', this.cmDomHandler);
     }
   };

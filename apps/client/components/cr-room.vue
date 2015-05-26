@@ -7,21 +7,25 @@
 <template>
   <div class="cr-Room">
     <h3>{{room.name}}</h3>
-    <cr-code-editor v-repeat="room.editors"></cr-code-editor>
+    <div v-repeat="editor: room.editors">
+      <cr-code-editor editor="{{editor}}" room="{{room}}"></cr-code-editor>
+    </div>
     <button v-on="click: addEditorClick">Add an editor</button>
-    <iframe src="/render/{{room.name}}"></iframe>
+    <iframe v-el="render" src="/render/{{room.name}}?main={{room.main}}" allowfullscreen="true" sandbox="allow-scripts allow-pointer-lock allow-same-origin allow-popups allow-forms" allowtransparency="true" style="height: 100%; width: 724px;"></iframe>
   </div>
 </template>
 
 <script>
   var service = require('../../model-service');
+  var proxy = require('../../racer-model-proxy');
 
   module.exports = {
     data: function () {
       return {
         room: {
           name: null,
-          editors: []
+          editors: [],
+          main: ''
         },
         params: {
           room: null
@@ -40,20 +44,29 @@
         service
           .get('rooms/' + this.params.room)
           .then(function (model) {
-            _this.model = model.at('_page.room');
-            _this.room = _this.model.get();
+            _this.room = proxy(model.at('_page.room'));
           });
       },
       addEditorClick: function (e) {
-        this.model.at('editors')
+        this.room.editors.$model
           .pass({
             local: true
           })
           .push({
             mode: 'text/html',
-            text: '<p>Some content</p>'
+            text: ''
           });
       }
+    },
+    created: function () {
+      var _this = this;
+      this.$on('run', function (child) {
+        this.$$.render.contentDocument.location.reload(true);
+      });
+      this.$on('main', function (id) {
+        console.log(id);
+        this.room.$model.set('main', id);
+      });
     }
   };
 </script>

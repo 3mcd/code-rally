@@ -3,7 +3,26 @@
   <head>
     <meta charset="utf-8">
     <title>CR</title>
+    <style>
+      *, *:before, *:after {
+        box-sizing: border-box;
+      }
+    </style>
+    <link rel="stylesheet" href="/normalize.css" />
     <link rel="stylesheet" href="/cm/lib/codemirror.css" />
+    <link rel="stylesheet" href="/cm-base16-ocean.css" />
+    <script type="text/javascript">
+        (function() {
+            var path = '//easy.myfonts.net/v2/js?sid=208280(font-family=Pragmata+Pro)&sid=208281(font-family=Pragmata+Pro+Bold)&key=QmwLMJSnON',
+                protocol = ('https:' == document.location.protocol ? 'https:' : 'http:'),
+                trial = document.createElement('script');
+            trial.type = 'text/javascript';
+            trial.async = true;
+            trial.src = protocol + path;
+            var head = document.getElementsByTagName("head")[0];
+            head.appendChild(trial);
+        })();
+    </script>
   </head>
   <body>
     <div id="app"></div>

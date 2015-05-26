@@ -6,7 +6,10 @@
  */
 module.exports = {
   bind: function () {
-    this.attr = this.el.nodeType === 3 ? 'nodeValue' : 'textContent';
+    this.attr =
+      this.el.nodeType === 3 ||
+      this.el.tagName == 'TEXTAREA' ||
+      this.el.tagName == 'INPUT' ? 'value' : 'textContent';
   },
   update: function (value, previous) {
     var pos;

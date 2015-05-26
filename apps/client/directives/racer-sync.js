@@ -1,17 +1,21 @@
 module.exports = {
-
+  
   isLiteral: true,
 
   bind: function () {
     var expression = this.expression;
+    var modelRef = this.arg || '$model';
+    var model = modelRef.split('.').reduce(function (a, x) {
+      return a && a[x];
+    }, this.vm.$data);
 
-    if (this.vm.$data.$model) {
+    if (model) {
       this.handler = function () {
-        var previous = this.vm.$data.$model.get(expression);
+        var previous = model.get(expression);
         if ('number' == typeof previous) {
-          intOp(this.vm.$data.$model, expression, parseInt(this.el.value));
+          intOp(model, expression, parseInt(this.el.value));
         } else {
-          stringOp(this.vm.$data.$model, expression, this.el.value, previous);
+          stringOp(model, expression, this.el.value, previous);
         }
       }.bind(this);
 

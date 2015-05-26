@@ -52,6 +52,11 @@ function scriptBundle(path, cb) {
   });
 }
 
+app.get('/normalize.css', function (req, res, next) {
+  res.type('css');
+  res.send(fs.readFileSync(__dirname + '/node_modules/normalize.css/normalize.css'));
+});
+
 app.get('/client.js', function(req, res, next) {
   scriptBundle(__dirname + '/apps/client/index.js', function(err, js) {
     if (err) return next(err);
