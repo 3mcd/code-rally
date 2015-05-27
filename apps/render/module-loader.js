@@ -1,15 +1,24 @@
-function Module(id, fn) {
-  this.id = id;
-  this.fn = fn;
-  this.exports = null;
-  this._loader = null;
-}
+var createModule = function (id, fn) {
+  var _loader = null;
+  var _fn = fn;
 
-Module.prototype.get = function () {
-  if (this.exports === null) {
-    this.fn(this, this._loader.require.bind(this._loader));
+  function Module(id) {
+    this.id = id;
+    this.exports = null;
   }
-  return this.exports;
+
+  Module.prototype.get = function () {
+    if (this.exports === null) {
+      _fn(this, _loader.require.bind(_loader));
+    }
+    return this.exports;
+  };
+
+  Module.prototype.setLoader = function (loader) {
+    _loader = loader;
+  };
+
+  return new Module(id);
 };
 
 function Loader() {
@@ -21,14 +30,14 @@ Loader.prototype.require = function (id) {
 };
 
 Loader.prototype.define = function (id, fn) {
-  var module = new Module(id, fn);
-  this.register(module);
-  return module;
+  var mod = createModule(id, fn);
+  this.register(mod);
+  return mod;
 };
 
-Loader.prototype.register = function (module) {
-  module._loader = this;
-  this.modules[module.id] = module;
+Loader.prototype.register = function (mod) {
+  mod.setLoader(this);
+  this.modules[mod.id] = mod;
 };
 
 module.exports = Loader;

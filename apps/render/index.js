@@ -1,9 +1,8 @@
 var roomId = document.querySelector('script').getAttribute('data-room-id');
 var Vue = require('vue');
 var service = require('../model-service');
-var Loader = require('./module-loader');
 
-window.loader = new Loader();
+window.Loader = require('./module-loader');
 
 var app = new Vue(require('./components/cr-render.vue')).$mount('#app');
 

@@ -1,5 +1,3 @@
-<!-- CrApp -->
-
 <style lang="stylus">
   @font-face {
     font-family: 'Source Sans Pro';
@@ -10,13 +8,13 @@
   
   .cr-App
     font-family 'Source Sans Pro'
+    position absolute
+    height 100%
+    width 100%
 </style>
 
 <template>
-  <a href="/rooms/home">Home</a>
-  <div class="cr-App">
-    <div v-component="{{view}}" v-with="params:params" v-transition></div>
-  </div>
+  <div class="cr-App" v-component="{{view}}" v-with="params:params" v-transition></div>
 </template>
 
 <script type="text/javascript">

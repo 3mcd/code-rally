@@ -20,7 +20,7 @@
       <option value="text/javascript">js</option>
       <option value="text/css">css</option>
     </select>
-    <button v-on="click: deleteClicked">Delete</button>
+    <button v-on="click: removeClicked">Delete</button>
     <button v-on="click: runClicked" v-show="editor.mode == 'text/javascript' && room.main == editor.name">Run</button>
     <label v-show="editor.mode == 'text/javascript'">Main
       <input type="checkbox" v-el="main" v-model="main" />
@@ -30,27 +30,27 @@
 
 <script>
   module.exports = {
-    paramAttributes: ['editor', 'room'],
+    paramAttributes: ['editor', 'room', 'langs'],
     computed: {
       main: {
         get: function () {
           return this.room.main == this.editor.name;
         },
         set: function (value) {
-          if (value) {
-            this.$dispatch('main', this.editor.name);
-          }
+          this.$dispatch('main', value ? this.editor.name : null);
         }
       }
     },
     methods: {
       removeEditor: function () {
+        this.$dispatch('remove', this);
         this.editor.$model.remove();
       },
       onModeChange: function (e) {
+        console.log(this.editor.mode);
         this.editor.$model.set('mode', this.$$.select.value);
       },
-      deleteClicked: function (e) {
+      removeClicked: function (e) {
         this.removeEditor();
       },
       runClicked: function (e) {

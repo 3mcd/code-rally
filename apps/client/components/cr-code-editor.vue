@@ -22,7 +22,7 @@
 
 <template>
   <div class="cr-CodeEditor">
-    <cr-code-editor-bar editor="{{editor}}" room="{{room}}"></cr-code-editor-bar>
+    <cr-code-editor-bar editor="{{editor}}" room="{{room}}" langs="{{langs}}"></cr-code-editor-bar>
     <textarea v-el="editor">{{editor.text}}</textarea>
   </div>
 </template>
@@ -35,7 +35,7 @@
     components: {
       'cr-code-editor-bar': require('./cr-code-editor-bar.vue')
     },
-    paramAttributes: ['editor', 'room'],
+    paramAttributes: ['editor', 'room', 'langs'],
     methods: {
       check: function () {
         var _this = this;

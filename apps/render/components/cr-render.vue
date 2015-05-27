@@ -12,6 +12,15 @@
 </template>
 
 <script type="text/javascript">
+  function uuid() {
+      var d = new Date().getTime();
+      return 'xxxxxxx'.replace(/[xy]/g, function(c) {
+          var r = (d + Math.random()*16)%16 | 0;
+          d = Math.floor(d/16);
+          return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+      });
+  };
+
   module.exports = {
     data: function () {
       return {
@@ -35,6 +44,7 @@
     },
     methods: {
       jsUpdate: function () {
+        var loaderId = 'loader$' + uuid(); 
         var injected = Array.prototype.slice.call(document.querySelectorAll('[data-injected]'));
 
         for (var i = 0; i < injected.length; i++) {
@@ -44,26 +54,25 @@
         var g = document.createElement('script');
         var s = document.getElementsByTagName('script')[0];
 
-        g.text = '\n;(function(loader) {\n\n';
+        g.text = '\n;(function(' + loaderId + ') {\n\n';
         
         g.setAttribute('data-injected', true);
 
         window.require = null;
 
         for (var i = 0; i < this.js.length; i++) {
-          g.text += '  loader.define("' + this.js[i].name + '", function (module, require) {\n'
+          g.text += '  ' + loaderId + '.define("' + this.js[i].name + '", function (module, require) {\n'
           g.text += this.js[i].text.split('\n').map(function (x) {
             return '    ' + x;
           }).join('\n') + '\n';
           g.text += '  });\n\n'
         }
 
-        g.text += '}(window.loader));\n';
+        g.text += loaderId + '.require("' + this.room.main + '");\n\n';
+
+        g.text += '}(new window.Loader()));\n';
 
         s.parentNode.insertBefore(g, s);
-
-        if (this.room.main)
-          window.loader.require(this.room.main);
       }
     }
   };
