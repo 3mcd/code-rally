@@ -1,0 +1,33 @@
+/*
+
+    Name:       Code Rally
+    Author:     Eric McDaniel (http://ericmcd.com)
+
+    CodeMirror template by Jan T. Sott (https://github.com/idleberg/base16-codemirror)
+    Based on Google's Dart language design (https://www.dartlang.org)
+
+*/
+
+.cm-s-code-rally.CodeMirror {background: #f0f0f0; color: #4d4d4d;}
+.cm-s-code-rally div.CodeMirror-selected {background: #dfe1e8 !important;}
+.cm-s-code-rally .CodeMirror-gutters {background: #f0f0f0; border-right: 0px;}
+.cm-s-code-rally .CodeMirror-linenumber {color: #a7adba;}
+.cm-s-code-rally .CodeMirror-cursor {border-left: 1px solid #65737e !important;}
+
+.cm-s-code-rally span.cm-comment {color: #757575;}
+.cm-s-code-rally span.cm-atom {color: #2fbcb2;}
+.cm-s-code-rally span.cm-number {color: #2fbcb2;}
+
+.cm-s-code-rally span.cm-property, .cm-s-code-rally span.cm-attribute {color: #4d4d4d;}
+.cm-s-code-rally span.cm-keyword {color: #153892;}
+.cm-s-code-rally span.cm-string {color: #0084c5;}
+
+.cm-s-code-rally span.cm-variable {color: #4d4d4d;}
+.cm-s-code-rally span.cm-variable-2 {color: #8fa1b3;}
+.cm-s-code-rally span.cm-def {color: #4d4d4d;}
+.cm-s-code-rally span.cm-error {background: #153892; color: #65737e;}
+.cm-s-code-rally span.cm-tag {color: #2fbcb2;}
+.cm-s-code-rally span.cm-bracket {color: #4d4d4d;}
+.cm-s-code-rally span.cm-link {color: #2fbcb2;}
+
+.cm-s-code-rally .CodeMirror-matchingbracket { text-decoration: underline; color: white !important;}

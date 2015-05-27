@@ -21,9 +21,9 @@
       <option value="text/css">css</option>
     </select>
     <button v-on="click: deleteClicked">Delete</button>
-    <button v-on="click: runClicked" v-show="editor.mode == 'text/javascript'">Run</button>
+    <button v-on="click: runClicked" v-show="editor.mode == 'text/javascript' && room.main == editor.name">Run</button>
     <label v-show="editor.mode == 'text/javascript'">Main
-      <input type="checkbox" v-el="main" v-on="click: mainClicked" v-attr="checked : room.main == editor.name" />
+      <input type="checkbox" v-el="main" v-model="main" />
     </label>
   </div>
 </template>
@@ -31,6 +31,18 @@
 <script>
   module.exports = {
     paramAttributes: ['editor', 'room'],
+    computed: {
+      main: {
+        get: function () {
+          return this.room.main == this.editor.name;
+        },
+        set: function (value) {
+          if (value) {
+            this.$dispatch('main', this.editor.name);
+          }
+        }
+      }
+    },
     methods: {
       removeEditor: function () {
         this.editor.$model.remove();
@@ -43,11 +55,6 @@
       },
       runClicked: function (e) {
         this.$dispatch('run', this);
-      },
-      mainClicked: function (e) {
-        if (this.$$.main.checked) {
-          this.$dispatch('main', this.editor.name);
-        }
       }
     }
   };

@@ -1,8 +1,20 @@
 <style lang="stylus">
+  @font-face {
+      font-family: 'bitstream_vera_sans_monoBdOb';
+      src: url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.eot');
+      src: url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.eot?#iefix') format('embedded-opentype'),
+           url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.woff') format('woff'),
+           url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.ttf') format('truetype'),
+           url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.svg#bitstream_vera_sans_monoBdOb') format('svg');
+      font-weight: normal;
+      font-style: normal;
+  }
+
   .CodeMirror
     height 150px
-    font-family "Pragmata Pro"
-    font-size 13px
+    font-family "bitstream_vera_sans_monoBdOb"
+    font-size 12px
+    -webkit-font-smoothing antialiased;
 
   .cr-CodeEditor
     width 100%
@@ -105,7 +117,7 @@
         extraKeys: {
           'Tab': function (cm) { cm.execCommand('insertSoftTab'); }
         },
-        theme: 'base16-ocean-light'
+        theme: 'code-rally'
       });
 
       this.updateMode(this.editor.mode);

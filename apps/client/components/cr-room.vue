@@ -11,7 +11,7 @@
       <cr-code-editor editor="{{editor}}" room="{{room}}"></cr-code-editor>
     </div>
     <button v-on="click: addEditorClick">Add an editor</button>
-    <iframe v-el="render" src="/render/{{room.name}}?main={{room.main}}" allowfullscreen="true" sandbox="allow-scripts allow-pointer-lock allow-same-origin allow-popups allow-forms" allowtransparency="true" style="height: 100%; width: 724px;"></iframe>
+    <iframe v-el="render" src="/render/{{room.name}}" allowfullscreen="true" sandbox="allow-scripts allow-pointer-lock allow-same-origin allow-popups allow-forms" allowtransparency="true" style="height: 100%; width: 724px;"></iframe>
   </div>
 </template>
 
@@ -61,10 +61,9 @@
     created: function () {
       var _this = this;
       this.$on('run', function (child) {
-        this.$$.render.contentDocument.location.reload(true);
+        this.room.$model.set('ts', new Date().getTime() / 1000);
       });
       this.$on('main', function (id) {
-        console.log(id);
         this.room.$model.set('main', id);
       });
     }

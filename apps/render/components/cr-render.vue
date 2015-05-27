@@ -9,7 +9,6 @@
   <template v-repeat="room.editors | filterBy 'text/html' in 'mode'">
     {{{text}}}
   </template>
-
 </template>
 
 <script type="text/javascript">
@@ -18,9 +17,10 @@
       return {
         room: {
           name: '',
-          editors: []
-        },
-        main: ''
+          main: '',
+          editors: [],
+          ts: 0
+        }
       }
     },
     computed: {
@@ -31,7 +31,7 @@
       }
     },
     watch: {
-      'js': 'jsUpdate'
+      'room.ts': 'jsUpdate'
     },
     methods: {
       jsUpdate: function () {
@@ -48,6 +48,8 @@
         
         g.setAttribute('data-injected', true);
 
+        window.require = null;
+
         for (var i = 0; i < this.js.length; i++) {
           g.text += '  loader.define("' + this.js[i].name + '", function (module, require) {\n'
           g.text += this.js[i].text.split('\n').map(function (x) {
@@ -60,8 +62,8 @@
 
         s.parentNode.insertBefore(g, s);
 
-        if (this.main)
-          window.loader.require(this.main);
+        if (this.room.main)
+          window.loader.require(this.room.main);
       }
     }
   };

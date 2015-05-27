@@ -7,8 +7,6 @@ window.loader = new Loader();
 
 var app = new Vue(require('./components/cr-render.vue')).$mount('#app');
 
-app.main = getQueryVariable('main');
-
 service.get('rooms/' + roomId)
   .then(function (model) {
     app.room = model.get('_page.room');
