@@ -1,26 +1,51 @@
 <style lang="stylus">
+  .cr-Room-tabs
+    position relative
+    font-size 0
+    z-index 1
+
   .cr-Room-tabs > button
     background #aaa
     color #fff
     border 0
     outline 0
     font-size 12px
+    font-weight 200
+    &:hover
+      background #bbb
+    &:last-child
+      margin-left 3px
 
   .cr-Room-tabs > button.is-active
     background #f0f0f0
-    color #aaa
+    color #0084c5
+    margin-top -2px
+    border-top 2px solid #0084c5
+
+  .cr-Room-tabs > button.is-active + button.is-active
+    padding-left 0
+    &:hover
+      color #ff0040
+
+  .cr-Room-editors
+    position relative
+    z-index 10
 </style>
 
 <template>
   <div class="cr-Room">
     <h3>{{room.name}}</h3>
+    Reload <input type="checkbox" v-model="room.reload" />
     <div class="cr-Room-tabs">
-      <button v-repeat="room.editors" v-on="click: active = name" v-class="is-active: name == active">{{getTabName(name, mode)}}</button>
+      <template v-repeat="editor: room.editors">
+        <button v-on="click: active = editor" v-class="is-active: editor == active">{{getTabName(editor.name, editor.mode)}}</button>
+        <button v-on="click: removeEditor(editor)" v-if="editor == active" v-class="is-active: editor == active">x</button>
+      </template>
       <button v-on="click: addEditorClick">+</button>
     </div>
     <div class="cr-Room-editors">
       <template v-repeat="editor: room.editors">
-        <cr-code-editor editor="{{editor}}" room="{{room}}" langs="{{langs}}" v-if="editor.name == active"></cr-code-editor>
+        <cr-code-editor editor="{{editor}}" room="{{room}}" langs="{{langs}}" v-if="editor == active"></cr-code-editor>
       </template>
     </div>
     <div class="cr-Room-render">
@@ -44,7 +69,7 @@
     },
     {
       ext: 'js',
-      name: 'js',
+      name: 'javascript',
       mime: 'text/javascript'
     }
   ];
@@ -57,7 +82,8 @@
         room: {
           name: null,
           editors: [],
-          main: ''
+          main: '',
+          reload: false
         },
         langs: langs,
         params: {
@@ -100,12 +126,15 @@
             }).mime,
             text: ''
           });
-        this.room.active = '(new)';
+        this.room.active = _.last(this.room.editors);
       },
       getTabName: function (name, mode) {
         return name + '.' + _.find(this.langs, function (x) {
           return x.mime == mode;
         }).ext;
+      },
+      removeEditor: function (editor) {
+        editor.$model.remove();
       }
     },
     created: function () {

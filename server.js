@@ -97,6 +97,8 @@ app.get('/model/rooms/:roomId', function(req, res, next) {
     if (!scoped.get()) {
       scoped.set({
         name: roomId,
+        reload: false,
+        main: '',
         editors: [
           { name: 'html', mode: 'text/html', text: '<p>Test</p>' }
         ]

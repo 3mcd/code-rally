@@ -123,7 +123,6 @@
       this.updateMode(this.editor.mode);
 
       _.bindAll(this, 'cmModelHandler', 'cmDomHandler');
-
       this.$watch('editor.mode', this.onModeChange);
       this.editor.$model.on('change', 'text', this.cmModelHandler);
       cm.on('change', this.cmDomHandler);

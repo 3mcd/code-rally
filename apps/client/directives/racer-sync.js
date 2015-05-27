@@ -12,24 +12,36 @@ module.exports = {
     if (model) {
       this.handler = function () {
         var previous = model.get(expression);
-        if ('number' == typeof previous) {
-          intOp(model, expression, parseInt(this.el.value));
+        if (this.isCheckbox) {
+          model.set(expression, this.el.value == 'on');
+        } else if (this.isTextInput) {
+          if ('number' == typeof previous) {
+            intOp(model, expression, parseInt(this.el.value));
+          } else {
+            stringOp(model, expression, this.el.value, previous);
+          }
         } else {
-          stringOp(model, expression, this.el.value, previous);
+          model.set(expression, this.el.value);
         }
       }.bind(this);
 
-      this.attr =
-        this.el.nodeType === 3 ||
-        this.el.tagName == 'TEXTAREA' ||
-        this.el.tagName == 'INPUT' ? 'value' : 'textContent';
+      this.isCheckbox = this.el.getAttribute('type') == 'checkbox';
 
-      this.el.addEventListener('input', this.handler);
+      this.isTextInput = this.el.nodeType === 3 ||
+        this.el.tagName == 'TEXTAREA' ||
+        this.el.tagName == 'INPUT' && !this.isCheckbox;
+
+      if (this.isTextInput) {
+        this.el.addEventListener('input', this.handler);
+      } else {
+        this.el.addEventListener('change', this.handler);
+      }
     }
   },
 
   unbind: function () {
     this.el.removeEventListener('input', this.handler);
+    this.el.addEventListener('change', this.handler);
   }
 
 };
