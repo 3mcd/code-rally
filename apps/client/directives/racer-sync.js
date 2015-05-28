@@ -13,7 +13,7 @@ module.exports = {
       this.handler = function () {
         var previous = model.get(expression);
         if (this.isCheckbox) {
-          model.set(expression, this.el.value == 'on');
+          model.set(expression, this.el.checked);
         } else if (this.isTextInput) {
           if ('number' == typeof previous) {
             intOp(model, expression, parseInt(this.el.value));

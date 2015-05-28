@@ -8,7 +8,7 @@
 
 <template>
   <div class="cr-Render">
-    <iframe v-el="render" src="/render/{{room.name}}{{room.reload ? '?=' + ts : ''}}" allowfullscreen="true" sandbox="allow-scripts allow-pointer-lock allow-same-origin allow-popups allow-forms" allowtransparency="true"></iframe>
+    <iframe v-el="render" src="/render/{{room.name}}?ts={{room.reload ? room.ts : ''}}" allowfullscreen="true" sandbox="allow-scripts allow-pointer-lock allow-same-origin allow-popups allow-forms" allowtransparency="true"></iframe>
   </div>
 </template>
 

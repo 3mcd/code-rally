@@ -1,16 +1,16 @@
 <style lang="stylus">
   .cr-Room-tabs
-    position relative
     font-size 0
+    position relative
     z-index 1
 
   .cr-Room-tabs > button
     background #aaa
-    color #fff
     border 0
-    outline 0
+    color #fff
     font-size 12px
     font-weight 200
+    outline 0
     &:hover
       background #bbb
     &:last-child
@@ -30,12 +30,37 @@
   .cr-Room-editors
     position relative
     z-index 10
+    
+  .cr-Room-options
+    font-size 12px
+    margin-bottom 1em
+
+  .cr-Room-options > ul
+    list-style-type none
+    margin 0
+    padding 0
+    
+  .cr-Room-options ul > li
+    background #e9e9e9
+    display inline-block
+    padding 3px
+    width auto
+    
+  .cr-Room-options > ul > li > *
+    vertical-align middle
 </style>
 
 <template>
   <div class="cr-Room">
     <h3>{{room.name}}</h3>
-    Reload <input type="checkbox" v-model="room.reload" />
+    <div class="cr-Room-options" v-if="loaded">
+      <ul>
+        <li>
+          <label>Reload on run</label>
+          <input type="checkbox" v-racer-sync="room.$model : reload" v-model="room.reload" />
+        </li>
+      </ul>
+    </div>
     <div class="cr-Room-tabs">
       <template v-repeat="editor: room.editors">
         <button v-on="click: active = editor" v-class="is-active: editor == active">{{getTabName(editor.name, editor.mode)}}</button>
@@ -90,7 +115,8 @@
           room: null
         },
         active: '',
-        previous: ''
+        previous: '',
+        loaded: false
       }
     },
     watch: {
@@ -108,7 +134,8 @@
           .get('rooms/' + this.params.room)
           .then(function (model) {
             _this.room = proxy(model.at('_page.room'));
-            _this.active = _this.room.editors[0].name;
+            _this.active = _this.room.editors[0];
+            _this.loaded = true;
           });
       },
       activeUpdate: function (previous, value) {
@@ -135,6 +162,7 @@
       },
       removeEditor: function (editor) {
         editor.$model.remove();
+        this.active = this.previous;
       }
     },
     created: function () {
@@ -144,9 +172,6 @@
       });
       this.$on('main', function (id) {
         this.room.$model.set('main', id);
-      });
-      this.$on('remove', function (child) {
-        this.active = this.previous;
       });
     }
   };
