@@ -1,6 +1,8 @@
 var racer = require('racer');
 var http = require('superagent');
 
+window.Promise = require('es6-promise').Promise;
+
 var cache = {};
 
 function get(uri) {

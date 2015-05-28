@@ -1,32 +1,4 @@
 <style lang="stylus">
-  .cr-Room-tabs
-    font-size 0
-    position relative
-    z-index 1
-
-  .cr-Room-tabs > button
-    background #aaa
-    border 0
-    color #fff
-    font-size 12px
-    font-weight 200
-    outline 0
-    &:hover
-      background #bbb
-    &:last-child
-      margin-left 3px
-
-  .cr-Room-tabs > button.is-active
-    background #f0f0f0
-    color #0084c5
-    margin-top -2px
-    border-top 2px solid #0084c5
-
-  .cr-Room-tabs > button.is-active + button.is-active
-    padding-left 0
-    &:hover
-      color #ff0040
-
   .cr-Room-editors
     position relative
     z-index 10
@@ -51,9 +23,9 @@
 </style>
 
 <template>
-  <div class="cr-Room">
+  <div class="cr-Room" v-if="loaded">
     <h3>{{room.name}}</h3>
-    <div class="cr-Room-options" v-if="loaded">
+    <div class="cr-Room-options">
       <ul>
         <li>
           <label>Reload on run</label>
@@ -61,13 +33,7 @@
         </li>
       </ul>
     </div>
-    <div class="cr-Room-tabs">
-      <template v-repeat="editor: room.editors">
-        <button v-on="click: active = editor" v-class="is-active: editor == active">{{getTabName(editor.name, editor.mode)}}</button>
-        <button v-on="click: removeEditor(editor)" v-if="editor == active" v-class="is-active: editor == active">x</button>
-      </template>
-      <button v-on="click: addEditorClick">+</button>
-    </div>
+    <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
     <div class="cr-Room-editors">
       <template v-repeat="editor: room.editors">
         <cr-code-editor editor="{{editor}}" room="{{room}}" langs="{{langs}}" v-if="editor == active"></cr-code-editor>
@@ -102,6 +68,11 @@
   var service = require('../../model-service');
 
   module.exports = {
+    components: {
+      'cr-tabs': require('./cr-tabs.vue'),
+      'cr-code-editor': require('./cr-code-editor.vue'),
+      'cr-render': require('./cr-render.vue')
+    },
     data: function () {
       return {
         room: {
@@ -114,34 +85,29 @@
         params: {
           room: null
         },
-        active: '',
-        previous: '',
-        loaded: false
+        loaded: false,
+        active: null,
+        previousEditor: null
       }
     },
-    watch: {
-      'params.room': 'roomUpdate',
-      'active': 'activeUpdate'
-    },
-    components: {
-      'cr-code-editor': require('./cr-code-editor.vue'),
-      'cr-render': require('./cr-render.vue')
-    },
-    methods: {
-      roomUpdate: function () {
-        var _this = this;
-        service
-          .get('rooms/' + this.params.room)
-          .then(function (model) {
-            _this.room = proxy(model.at('_page.room'));
-            _this.active = _this.room.editors[0];
-            _this.loaded = true;
+    computed: {
+      tabs: {
+        get: function () {
+          var _this = this;
+          return _.map(this.room.editors, function (x) {
+            return {
+              ref: x,
+              name: x.name,
+              ext: _.find(_this.langs, function (y) {
+                return x.mode == y.mime;
+              }).ext
+            };
           });
-      },
-      activeUpdate: function (previous, value) {
-        this.previous = value;
-      },
-      addEditorClick: function (e) {
+        }
+      }
+    },
+    events: {
+      'tab:add': function () {
         this.room.editors.$model
           .pass({
             local: true
@@ -153,26 +119,45 @@
             }).mime,
             text: ''
           });
-        this.room.active = _.last(this.room.editors);
+        this.active = _.last(this.room.editors);
       },
-      getTabName: function (name, mode) {
-        return name + '.' + _.find(this.langs, function (x) {
-          return x.mime == mode;
-        }).ext;
+      'tab:change': function (ref) {
+        this.active = ref;
       },
-      removeEditor: function (editor) {
-        editor.$model.remove();
-        this.active = this.previous;
+      'tab:remove': function (ref) {
+        ref.$model.remove();
+      },
+      'run': function (child) {
+        this.room.$model.set('ts', new Date().getTime() / 1000);
+      },
+      'main': function (id) {
+        this.room.$model.set('main', id);
       }
     },
-    created: function () {
-      var _this = this;
-      this.$on('run', function (child) {
-        this.room.$model.set('ts', new Date().getTime() / 1000);
-      });
-      this.$on('main', function (id) {
-        this.room.$model.set('main', id);
-      });
+    methods: {
+      roomUpdate: function (newVal, oldVal) {
+        var _this = this;
+        service
+          .get('rooms/' + newVal)
+          .then(function (model) {
+            _this.room = proxy(model.at('_page.room'));
+            _this.active = _this.room.editors[0];
+            _this.loaded = true;
+          });
+      },
+      activeUpdate: function (newVal, oldVal) {
+        this.$.tabs.select(newVal);
+        this.previousEditor = oldVal;
+      },
+      findEditor: function (name) {
+        return _.find(this.room.editors, function (x) {
+          return x.name == name;
+        });
+      }
+    },
+    watch: {
+      'params.room': 'roomUpdate',
+      'active': 'activeUpdate'
     }
   };
 </script>

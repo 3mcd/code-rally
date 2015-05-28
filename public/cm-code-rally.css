@@ -8,9 +8,9 @@
 
 */
 
-.cm-s-code-rally.CodeMirror {background: #f0f0f0; color: #4d4d4d;}
+.cm-s-code-rally.CodeMirror {background: #fafafa; color: #4d4d4d;}
 .cm-s-code-rally div.CodeMirror-selected {background: #dfe1e8 !important;}
-.cm-s-code-rally .CodeMirror-gutters {background: #f0f0f0; border-right: 0px;}
+.cm-s-code-rally .CodeMirror-gutters {background: #f6f6f6; border-right: 0px;}
 .cm-s-code-rally .CodeMirror-linenumber {color: #a7adba;}
 .cm-s-code-rally .CodeMirror-cursor {border-left: 1px solid #65737e !important;}
 
