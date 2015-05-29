@@ -4,6 +4,7 @@
     z-index 10
     
   .cr-Room-options
+    color #fff
     font-size 12px
     margin-bottom 1em
 
@@ -13,7 +14,7 @@
     padding 0
     
   .cr-Room-options ul > li
-    background #e9e9e9
+    background #aaa
     display inline-block
     padding 3px
     width auto
@@ -23,7 +24,7 @@
 </style>
 
 <template>
-  <div class="cr-Room" v-if="loaded">
+  <div class="cr-Room" v-if="meta.loaded">
     <h3>{{room.name}}</h3>
     <div class="cr-Room-options">
       <ul>
@@ -36,7 +37,7 @@
     <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
     <div class="cr-Room-editors">
       <template v-repeat="editor: room.editors">
-        <cr-code-editor editor="{{editor}}" room="{{room}}" langs="{{langs}}" v-if="editor == active"></cr-code-editor>
+        <cr-code-editor editor="{{editor}}" room="{{room}}" meta="{{meta}}" v-if="editor == meta.active"></cr-code-editor>
       </template>
     </div>
     <div class="cr-Room-render">
@@ -47,6 +48,11 @@
 
 <script>
   var _ = require('lodash');
+
+  var lang = require('../lang');
+  var proxy = require('../../racer-model-proxy');
+  var service = require('../../model-service');
+
   var langs = [
     {
       ext: 'html',
@@ -64,8 +70,6 @@
       mime: 'text/javascript'
     }
   ];
-  var proxy = require('../../racer-model-proxy');
-  var service = require('../../model-service');
 
   module.exports = {
     components: {
@@ -81,29 +85,27 @@
           main: '',
           reload: false
         },
-        langs: langs,
         params: {
           room: null
         },
-        loaded: false,
-        active: null,
-        previousEditor: null
+        meta: {
+          langs: langs,
+          loaded: false,
+          active: null,
+          previous: null
+        }
       }
     },
     computed: {
-      tabs: {
-        get: function () {
-          var _this = this;
-          return _.map(this.room.editors, function (x) {
-            return {
-              ref: x,
-              name: x.name,
-              ext: _.find(_this.langs, function (y) {
-                return x.mode == y.mime;
-              }).ext
-            };
-          });
-        }
+      tabs: function () {
+        var _this = this;
+        return _.map(this.room.editors, function (x) {
+          return {
+            ref: x,
+            name: x.name,
+            ext: lang.find(_this.meta.langs, x.mode).ext
+          };
+        });
       }
     },
     events: {
@@ -114,15 +116,13 @@
           })
           .push({
             name: '(new)',
-            mode: _.find(this.langs, function (x) {
-              return x.name == 'html';
-            }).mime,
+            mode: lang.find(this.meta.langs, 'html').mime,
             text: ''
           });
-        this.active = _.last(this.room.editors);
+        this.meta.active = _.last(this.room.editors);
       },
       'tab:change': function (ref) {
-        this.active = ref;
+        this.meta.active = ref;
       },
       'tab:remove': function (ref) {
         ref.$model.remove();
@@ -141,13 +141,15 @@
           .get('rooms/' + newVal)
           .then(function (model) {
             _this.room = proxy(model.at('_page.room'));
-            _this.active = _this.room.editors[0];
-            _this.loaded = true;
+            setTimeout(function () {
+              _this.meta.active = _this.room.editors[0];
+            }, 0);
+            _this.meta.loaded = true;
           });
       },
       activeUpdate: function (newVal, oldVal) {
         this.$.tabs.select(newVal);
-        this.previousEditor = oldVal;
+        this.meta.previous = oldVal;
       },
       findEditor: function (name) {
         return _.find(this.room.editors, function (x) {
@@ -157,7 +159,7 @@
     },
     watch: {
       'params.room': 'roomUpdate',
-      'active': 'activeUpdate'
+      'meta.active': 'activeUpdate'
     }
   };
 </script>

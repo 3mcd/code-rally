@@ -8,7 +8,6 @@
   
   .cr-App
     font-family 'Source Sans Pro'
-    position absolute
     height 100%
     width 100%
 </style>

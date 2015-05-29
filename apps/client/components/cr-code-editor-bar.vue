@@ -32,16 +32,14 @@
 
   .cr-CodeEditorBar-controls > select,
   .cr-CodeEditorBar-controls > input
-    background #fafafa
+    background #f4f4f4
     
   .cr-CodeEditorBar-controls > select
     cursor pointer
-
+  
   .cr-CodeEditorBar-controls > select:hover,
-  .cr-CodeEditorBar-controls > input:hover,
-  .cr-CodeEditorBar-controls > select:focus,
-  .cr-CodeEditorBar-controls > input:focus
-    background #fff
+  .cr-CodeEditorBar-controls > select:focus
+    background #fafafa
 
   .cr-CodeEditorBar-controls > input[type=checkbox]
     position absolute
@@ -55,10 +53,25 @@
     &:hover
       background #bbb
 
+  .cr-CodeEditorBar-run
+    padding 0 8px
+    transition all ease-out 225ms
+
+  .cr-CodeEditorBar-run.is-active
+    background #0084c5;
+
+  .cr-CodeEditorBar-run.is-active:hover
+    background #51baed !important
+
   .cr-CodeEditorBar-name
     background #fff !important
     border-right 1px solid #eee
     width 100px
+
+  .cr-CodeEditorBar-name:hover,
+  .cr-CodeEditorBar-name:focus
+    margin-top -2px
+    border-bottom 2px solid #a7adba
 </style>
 
 <template>
@@ -71,21 +84,22 @@
         <option value="text/css">css</option>
       </select>
       <label v-show="isJS">Main</label>
-      <input type="checkbox" v-show="isJS" v-model="main" />
+      <input type="checkbox" v-show="isJS" v-model="isMain" />
     </div>
     <div class="cr-CodeEditorBar-controls cr-CodeEditorBar-controls--right">
-      <button v-on="click: runClicked">Run</button>
+      <button v-attr="disabled: !roomHasJS" v-class="is-active: roomHasJS && room.main" class="cr-CodeEditorBar-run" v-on="click: runClicked">Run</button>
     </div>
   </div>
 </template>
 
 <script>
   var _ = require('lodash');
+  var lang = require('../lang');
 
   module.exports = {
-    paramAttributes: ['editor', 'room', 'langs'],
+    paramAttributes: ['editor', 'room', 'meta'],
     computed: {
-      main: {
+      isMain: {
         get: function () {
           return this.room.main == this.editor.name;
         },
@@ -93,11 +107,15 @@
           this.$dispatch('main', checked ? this.editor.name : null);
         }
       },
+      roomHasJS: function () {
+        var _this = this;
+        return _.any(this.room.editors, function (x) {
+          return x.mode == lang.find(_this.meta.langs, 'js').mime;
+        });
+      },
       isJS: {
         get: function () {
-          return this.editor.mode == _.find(this.langs, function (x) {
-            return x.name == 'javascript';
-          }).mime;
+          return this.editor.mode == lang.find(this.meta.langs, 'js').mime;
         }
       }
     },

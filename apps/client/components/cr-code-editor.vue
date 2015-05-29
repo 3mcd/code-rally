@@ -1,18 +1,18 @@
 <style lang="stylus">
   @font-face {
-      font-family: 'bitstream_vera_sans_monoBdOb';
+      font-family: 'Bitstream Vera Sans Mono';
       src: url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.eot');
       src: url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.eot?#iefix') format('embedded-opentype'),
            url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.woff') format('woff'),
            url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.ttf') format('truetype'),
-           url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.svg#bitstream_vera_sans_monoBdOb') format('svg');
+           url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.svg#Bitstream Vera Sans Mono') format('svg');
       font-weight: normal;
       font-style: normal;
   }
 
   .CodeMirror
     height 150px
-    font-family "bitstream_vera_sans_monoBdOb"
+    font-family "Bitstream Vera Sans Mono"
     font-size 12px
     -webkit-font-smoothing antialiased;
 
@@ -22,7 +22,7 @@
 
 <template>
   <div class="cr-CodeEditor">
-    <cr-code-editor-bar editor="{{editor}}" room="{{room}}" langs="{{langs}}"></cr-code-editor-bar>
+    <cr-code-editor-bar editor="{{editor}}" room="{{room}}" meta="{{meta}}"></cr-code-editor-bar>
     <textarea v-el="editor">{{editor.text}}</textarea>
   </div>
 </template>
@@ -35,7 +35,7 @@
     components: {
       'cr-code-editor-bar': require('./cr-code-editor-bar.vue')
     },
-    paramAttributes: ['editor', 'room', 'langs'],
+    paramAttributes: ['editor', 'room', 'meta'],
     methods: {
       check: function () {
         var _this = this;

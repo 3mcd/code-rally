@@ -17,7 +17,7 @@
       margin-left 3px
 
   .cr-Tabs > button.is-active
-    background #f0f0f0
+    background #e9e9e9
     color #0084c5
     margin-top -2px
     border-top 2px solid #0084c5

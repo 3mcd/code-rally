@@ -61,7 +61,7 @@
         window.require = null;
 
         for (var i = 0; i < this.js.length; i++) {
-          g.text += '  ' + loaderId + '.define("' + this.js[i].name + '", function (module, require) {\n'
+          g.text += '  ' + loaderId + '.define("' + this.js[i].name + '", function (exports, require, module) {\n'
           g.text += this.js[i].text.split('\n').map(function (x) {
             return '    ' + x;
           }).join('\n') + '\n';

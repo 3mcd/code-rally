@@ -4,12 +4,18 @@ var createModule = function (id, fn) {
 
   function Module(id) {
     this.id = id;
-    this.exports = null;
+    this.loaded = false;
+    this.exports = {};
   }
 
   Module.prototype.get = function () {
-    if (this.exports === null) {
-      _fn(this, _loader.require.bind(_loader));
+    if (this.loaded === false) {
+      try {
+        _fn(this.exports, _loader.require.bind(_loader), this);
+        this.loaded = true;
+      } catch (e) {
+        console.warn(e);
+      }
     }
     return this.exports;
   };
