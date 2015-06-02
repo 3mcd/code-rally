@@ -1,11 +1,13 @@
 <style lang="stylus">
+  .cr-Room
+    height 100%
+    
   .cr-Room-editors
     position relative
     z-index 10
     
   .cr-Room-options
     color #fff
-    font-size 12px
     margin-bottom 1em
 
   .cr-Room-options > ul
@@ -34,15 +36,21 @@
         </li>
       </ul>
     </div>
-    <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
-    <div class="cr-Room-editors">
-      <template v-repeat="editor: room.editors">
-        <cr-code-editor editor="{{editor}}" room="{{room}}" meta="{{meta}}" v-if="editor == meta.active"></cr-code-editor>
-      </template>
-    </div>
-    <div class="cr-Room-render">
-      <cr-render room="{{room}}"></cr-render>
-    </div>
+    <cr-panels>
+      <cr-panel flex="2 0 0">
+        <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
+        <div class="cr-Room-editors">
+          <template v-repeat="editor: room.editors">
+            <cr-code-editor editor="{{editor}}" room="{{room}}" meta="{{meta}}" v-if="editor == meta.active"></cr-code-editor>
+          </template>
+        </div>
+      </cr-panel>
+      <cr-panel flex="1 0 0">
+        <div class="cr-Room-render">
+          <cr-render room="{{room}}"></cr-render>
+        </div>
+      </cr-panel>
+    </cr-panels>
   </div>
 </template>
 
@@ -72,10 +80,13 @@
   ];
 
   module.exports = {
+    paramAttributes: ['params'],
     components: {
-      'cr-tabs': require('./cr-tabs.vue'),
       'cr-code-editor': require('./cr-code-editor.vue'),
-      'cr-render': require('./cr-render.vue')
+      'cr-panel': require('./cr-panel.vue'),
+      'cr-panels': require('./cr-panels.vue'),
+      'cr-render': require('./cr-render.vue'),
+      'cr-tabs': require('./cr-tabs.vue')
     },
     data: function () {
       return {

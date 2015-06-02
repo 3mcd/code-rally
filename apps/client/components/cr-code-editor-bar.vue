@@ -1,7 +1,6 @@
 <style lang="stylus">
   .cr-CodeEditorBar
     background #e9e9e9
-    font-size 0
     height 30px
     position relative
     z-index 10
@@ -11,6 +10,7 @@
 
   .cr-CodeEditorBar-controls
     position absolute
+    display table
 
   .cr-CodeEditorBar-controls--left
     left 0
@@ -24,7 +24,7 @@
   .cr-CodeEditorBar-controls > label
     border 0
     display inline-block
-    font-size 13px
+    font-size 1em
     height 30px
     margin 0
     outline 0
@@ -66,7 +66,7 @@
   .cr-CodeEditorBar-name
     background #fff !important
     border-right 1px solid #eee
-    width 100px
+    width 8em
 
   .cr-CodeEditorBar-name:hover,
   .cr-CodeEditorBar-name:focus

@@ -1,14 +1,13 @@
 <style lang="stylus">
   .cr-Tabs
-    font-size 0
     position relative
     z-index 1
+    display table
 
   .cr-Tabs > button
     background #aaa
     border 0
     color #fff
-    font-size 12px
     font-weight 200
     outline 0
     &:hover
@@ -30,9 +29,9 @@
 
 <template>
   <div class="cr-Tabs">
-    <template v-repeat="tab:tabs">
-      <button v-on="click: change(tab.ref)" v-class="is-active: tab.ref == active">{{tab.name}}.{{tab.ext}}</button>
-      <button v-on="click: removeTab(tab.ref)" v-if="tab.ref == active" v-class="is-active: tab.ref == active">x</button>
+    <template v-repeat="tabs">
+      <button v-on="click: change(ref)" v-class="is-active: ref == active">{{name}}.{{ext}}</button>
+      <button v-on="click: removeTab(ref)" v-if="ref == active" v-class="is-active: ref == active">x</button>
     </template>
     <button v-on="click: addTab">+</button>
   </div>

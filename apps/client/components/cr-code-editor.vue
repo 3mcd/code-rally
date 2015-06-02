@@ -11,9 +11,8 @@
   }
 
   .CodeMirror
-    height 150px
+    height 100%
     font-family "Bitstream Vera Sans Mono"
-    font-size 12px
     -webkit-font-smoothing antialiased;
 
   .cr-CodeEditor
