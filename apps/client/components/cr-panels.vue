@@ -10,7 +10,7 @@
 
 <script>
   module.exports = {
-    paramAttributes: ['direction'],
+    props: ['direction'],
     data: function () {
       return {
         direction: 'row'

@@ -20,11 +20,11 @@
 </style>
 
 <template>
-  <cr-panels direction="column">
-    <cr-panel>
-      <cr-view view="{{view}}" params="{{params}}"></cr-view>
+  <cr-panel direction="column">
+    <cr-panel flex="1">
+      <component is="{{view}}" params="{{params}}"></component>
     </cr-panel>
-  </cr-panels>
+  </cr-panel>
 </template>
 
 <script type="text/javascript">
@@ -34,7 +34,6 @@
       params: {}
     },
     components: {
-      'cr-view': require('./cr-view.vue'),
       'cr-panel': require('./cr-panel.vue'),
       'cr-panels': require('./cr-panels.vue'),
       'room': require('./cr-room.vue')

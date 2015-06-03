@@ -13,17 +13,23 @@
   .CodeMirror
     height 100%
     font-family "Bitstream Vera Sans Mono"
-    -webkit-font-smoothing antialiased;
+    font-size 0.9em
+    -webkit-font-smoothing antialiased
 
-  .cr-CodeEditor
+  cr-editor
     width 100%
+    display flex
+    flex-direction column
+    flex 1
 </style>
 
 <template>
-  <div class="cr-CodeEditor">
-    <cr-code-editor-bar editor="{{editor}}" room="{{room}}" meta="{{meta}}"></cr-code-editor-bar>
+  <cr-panel grow="0" basis="30px">
+    <cr-editor-bar editor="{{editor}}" room="{{room}}" meta="{{meta}}"></cr-editor-bar>
+  </cr-panel>
+  <cr-panel grow="1">
     <textarea v-el="editor">{{editor.text}}</textarea>
-  </div>
+  </cr-panel>
 </template>
 
 <script>
@@ -32,9 +38,9 @@
 
   module.exports = {
     components: {
-      'cr-code-editor-bar': require('./cr-code-editor-bar.vue')
+      'cr-editor-bar': require('./cr-editor-bar.vue')
     },
-    paramAttributes: ['editor', 'room', 'meta'],
+    props: ['editor', 'room', 'meta'],
     methods: {
       check: function () {
         var _this = this;

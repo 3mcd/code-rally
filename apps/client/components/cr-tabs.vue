@@ -1,10 +1,10 @@
 <style lang="stylus">
-  .cr-Tabs
+  cr-tabs
     position relative
     z-index 1
     display table
 
-  .cr-Tabs > button
+  cr-tabs > button
     background #aaa
     border 0
     color #fff
@@ -15,33 +15,31 @@
     &:last-child
       margin-left 3px
 
-  .cr-Tabs > button.is-active
+  cr-tabs > button.is-active
     background #e9e9e9
     color #0084c5
     margin-top -2px
     border-top 2px solid #0084c5
 
-  .cr-Tabs > button.is-active + button.is-active
+  cr-tabs > button.is-active + button.is-active
     padding-left 0
     &:hover
       color #ff0040
 </style>
 
 <template>
-  <div class="cr-Tabs">
-    <template v-repeat="tabs">
-      <button v-on="click: change(ref)" v-class="is-active: ref == active">{{name}}.{{ext}}</button>
-      <button v-on="click: removeTab(ref)" v-if="ref == active" v-class="is-active: ref == active">x</button>
-    </template>
-    <button v-on="click: addTab">+</button>
-  </div>
+  <template v-repeat="tabs">
+    <button v-on="click: change(ref)" v-class="is-active: ref == active">{{name}}.{{ext}}</button>
+    <button v-on="click: removeTab(ref)" v-if="ref == active" v-class="is-active: ref == active">x</button>
+  </template>
+  <button v-on="click: addTab">+</button>
 </template>
 
 <script>
   var _ = require('lodash');
   
   module.exports = {
-    paramAttributes: ['tabs'],
+    props: ['tabs'],
     data: function () {
       return {
         active: null,

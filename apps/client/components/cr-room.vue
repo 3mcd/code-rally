@@ -1,57 +1,56 @@
 <style lang="stylus">
-  .cr-Room
+  cr-room
     height 100%
     
-  .cr-Room-editors
+  cr-room-editors
     position relative
     z-index 10
     
-  .cr-Room-options
+  cr-room-options
+    display block
     color #fff
     margin-bottom 1em
 
-  .cr-Room-options > ul
+  cr-room-options > ul
     list-style-type none
     margin 0
     padding 0
     
-  .cr-Room-options ul > li
+  cr-room-options ul > li
     background #aaa
     display inline-block
     padding 3px
     width auto
     
-  .cr-Room-options > ul > li > *
+  cr-room-options > ul > li > *
     vertical-align middle
 </style>
 
 <template>
-  <div class="cr-Room" v-if="meta.loaded">
-    <h3>{{room.name}}</h3>
-    <div class="cr-Room-options">
-      <ul>
-        <li>
-          <label>Reload on run</label>
-          <input type="checkbox" v-racer-sync="room.$model : reload" v-model="room.reload" />
-        </li>
-      </ul>
-    </div>
-    <cr-panels>
-      <cr-panel flex="2 0 0">
+  <h3>{{room.name}}</h3>
+  <cr-room-options>
+    <ul>
+      <li>
+        <label>Reload on run</label>
+        <input type="checkbox" v-racer-sync="room.$model : reload" v-model="room.reload" />
+      </li>
+    </ul>
+  </cr-room-options>
+  <cr-panel wrap="wrap" align="stretch">
+    <cr-panel grow="1" basis="400px" direction="column">
+      <cr-panel flex="0">
         <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
-        <div class="cr-Room-editors">
-          <template v-repeat="editor: room.editors">
-            <cr-code-editor editor="{{editor}}" room="{{room}}" meta="{{meta}}" v-if="editor == meta.active"></cr-code-editor>
-          </template>
-        </div>
       </cr-panel>
-      <cr-panel flex="1 0 0">
-        <div class="cr-Room-render">
-          <cr-render room="{{room}}"></cr-render>
-        </div>
+      <cr-panel align="stretch">
+        <template v-repeat="editor: room.editors">
+          <cr-editor editor="{{editor}}" room="{{room}}" meta="{{meta}}" v-if="editor == meta.active"></cr-code-editor>
+        </template>
       </cr-panel>
-    </cr-panels>
-  </div>
+    </cr-panel>
+    <cr-panel grow="2" basis="500px">
+      <cr-render room="{{room}}"></cr-render>
+    </cr-panel>
+  </cr-panel>
 </template>
 
 <script>
@@ -60,7 +59,6 @@
   var lang = require('../lang');
   var proxy = require('../../racer-model-proxy');
   var service = require('../../model-service');
-
   var langs = [
     {
       ext: 'html',
@@ -80,9 +78,9 @@
   ];
 
   module.exports = {
-    paramAttributes: ['params'],
+    props: ['params'],
     components: {
-      'cr-code-editor': require('./cr-code-editor.vue'),
+      'cr-editor': require('./cr-editor.vue'),
       'cr-panel': require('./cr-panel.vue'),
       'cr-panels': require('./cr-panels.vue'),
       'cr-render': require('./cr-render.vue'),
