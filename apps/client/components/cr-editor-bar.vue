@@ -79,8 +79,7 @@
       <option value="text/javascript">js</option>
       <option value="text/css">css</option>
     </select>
-    <label v-show="isJS">Main</label>
-    <input type="checkbox" v-show="isJS" v-model="isMain" />
+    <label v-show="isJS">Main<input type="checkbox" v-show="isJS" v-model="isMain" /></label>
   </cr-editor-bar-controls>
   <cr-editor-bar-controls class="right">
     <button v-attr="disabled: !roomHasJS" v-class="is-active: roomHasJS && room.main" v-on="click: runClicked">Run</button>

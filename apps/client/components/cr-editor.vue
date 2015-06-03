@@ -11,10 +11,16 @@
   }
 
   .CodeMirror
+    flex 1
+    display flex
+    flex-direction column
     height 100%
     font-family "Bitstream Vera Sans Mono"
     font-size 0.9em
     -webkit-font-smoothing antialiased
+
+  .CodeMirror-scroll
+    flex 1
 
   cr-editor
     width 100%
@@ -27,7 +33,7 @@
   <cr-panel grow="0" basis="30px">
     <cr-editor-bar editor="{{editor}}" room="{{room}}" meta="{{meta}}"></cr-editor-bar>
   </cr-panel>
-  <cr-panel grow="1">
+  <cr-panel grow="1" align="stretch" direction="column">
     <textarea v-el="editor">{{editor.text}}</textarea>
   </cr-panel>
 </template>
