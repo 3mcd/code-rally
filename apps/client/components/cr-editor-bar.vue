@@ -20,7 +20,7 @@
     flex 1
 
   cr-editor-bar-controls.right
-    text-align right
+    justify-content flex-end
 
   cr-editor-bar-controls > button,
   cr-editor-bar-controls > input,
@@ -48,6 +48,8 @@
     position absolute
 
   cr-editor-bar-controls > button
+    flex-grow 0
+    flex-basis auto
     background #aaa
     color #fff
     padding 0 8px
