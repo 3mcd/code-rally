@@ -8,6 +8,7 @@ var racer = require('racer');
 var stringify = require('stringify');
 var handlebars = require('handlebars');
 
+racer.use(require('racer-schema'), require('./schema'));
 racer.use(require('racer-bundle'));
 
 redis.select(14);

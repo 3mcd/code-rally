@@ -68,7 +68,7 @@ function modelProxy(model, path) {
    */
   model.on('remove', function onModelRemove(index, values, passed) {
     var end = proxy.length;
-
+    
     for (; index <= end - 1; index++) {
       cleanupProxy(proxy[index]);
       proxy[index] = modelProxy(model, index);

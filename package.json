@@ -21,6 +21,7 @@
     "racer": "^0.6.0-alpha39",
     "racer-browserchannel": "^0.3.0",
     "racer-bundle": "^0.1.1",
+    "racer-schema": "^0.1.2",
     "redis": "^0.10.3",
     "stringify": "^3.1.0",
     "stylus": "^0.51.1",
