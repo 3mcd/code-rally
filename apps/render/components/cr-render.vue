@@ -3,10 +3,10 @@
 </style>
 
 <template>
-  <style v-repeat="room.editors | filterBy 'text/css' in 'mode'">
+  <style v-repeat="editors | filterBy 'text/css' in 'mode'">
     {{{text}}}
   </style>
-  <template v-repeat="room.editors | filterBy 'text/html' in 'mode'">
+  <template v-repeat="editors | filterBy 'text/html' in 'mode'">
     {{{text}}}
   </template>
 </template>
@@ -27,14 +27,14 @@
         room: {
           name: '',
           main: '',
-          editors: [],
           ts: 0
-        }
+        },
+        editors: []
       }
     },
     computed: {
       js: function () {
-        return this.room.editors.filter(function (x) {
+        return this.editors.filter(function (x) {
           return x.mode == 'text/javascript';
         });
       }

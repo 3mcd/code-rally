@@ -1,8 +1,7 @@
-return {
+module.exports = {
   /**
    * Child schema
    */
-  editor: require('./editor'),
   /**
    * Configuration
    */
@@ -10,7 +9,7 @@ return {
   title: 'Room',
   type: 'object',
   properties: {
-    name:{
+    name: {
       type: 'string',
       minLength: 1,
       maxLength: 25
@@ -19,12 +18,10 @@ return {
       type: 'boolean'
     },
     main: {
-      type: 'string'
-    },
-    editors: {
-      type: 'array',
-      maxItems: 10,
-      items: { '$ref': 'editor' }
+      oneOf: [
+        { $ref: require('./editor') },
+        { type: 'null' }
+      ]
     }
   }
 };

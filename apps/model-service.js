@@ -28,7 +28,7 @@ function modelAdder(uri) {
   return function (model) {
     cache[uri] = model;
     return model;
-  }
+  };
 }
 
 module.exports = {

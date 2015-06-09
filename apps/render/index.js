@@ -10,4 +10,5 @@ service
   .get('rooms/' + roomId)
   .then(function (model) {
     app.room = model.get('_page.room');
+    app.editors = model.get('_page.editors');
   });

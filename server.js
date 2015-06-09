@@ -8,7 +8,7 @@ var racer = require('racer');
 var stringify = require('stringify');
 var handlebars = require('handlebars');
 
-racer.use(require('racer-schema'), require('./schema'));
+// racer.use(require('racer-schema'), require('./schema'));
 racer.use(require('racer-bundle'));
 
 redis.select(14);
@@ -88,23 +88,25 @@ app.get('/model/rooms/:roomId', function(req, res, next) {
   
   if (!/^[a-zA-Z0-9_-]+$/.test(roomId)) return next();
 
-  var roomPath = 'rooms.' + roomId;
+  var $room = model.at('rooms.' + roomId);
+  
+  var $editors = model.query('editors', {
+    'roomId': $room.get('name')
+  });
 
-  model.subscribe(roomPath, function(err) {
+  model.subscribe($room, $editors, function(err) {
     if (err) return next(err);
 
-    var scoped = model.ref('_page.room', roomPath);
+    var scoped = model.ref('_page.room', $room);
 
     if (!scoped.get()) {
       scoped.set({
         name: roomId,
-        reload: false,
-        main: '',
-        editors: [
-          { name: 'html', mode: 'text/html', text: '<p>Test</p>' }
-        ]
+        reload: false
       });
     }
+
+    model.ref('_page.editors', $editors);
 
     model.bundle(function(err, bundle) {
       if (err) return next(err);
