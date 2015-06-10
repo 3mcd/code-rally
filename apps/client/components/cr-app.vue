@@ -6,6 +6,13 @@
     src: local('Source Sans Pro'), url('/fonts/source-sans-pro/SourceSansPro-Regular.otf') format('truetype');
   }
   
+  @font-face {
+    font-family: 'IcoMoon';
+    font-style: normal;
+    font-weight: normal;
+    src: local('IcoMoon'), url('/fonts/ico-moon/IcoMoon-Free.ttf') format('truetype');
+  }
+  
   cr-app
     display block
     font-family 'Source Sans Pro'
@@ -13,6 +20,7 @@
     height 100%
     width 100%
     overflow hidden
+    display flex
 
   cr-app *, cr-app *:before, cr-app *:after {
     box-sizing: border-box;

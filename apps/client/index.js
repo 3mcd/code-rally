@@ -9,7 +9,7 @@ require('codemirror/mode/css/css');
 require('codemirror/mode/javascript/javascript');
 require('codemirror/mode/xml/xml');
 
-var app = new Vue(require('./components/cr-app.vue')).$mount('#app');
+var app = window.app = new Vue(require('./components/cr-app.vue')).$mount('#app');
 
 var router = new Router().configure();
 

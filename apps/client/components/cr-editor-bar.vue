@@ -4,28 +4,20 @@
     flex-direction row
     align-items stretch
     width 100%
-    background #e9e9e9
+    background-color #e9e9e9
     position relative
     z-index 10
     -webkit-box-shadow 0 1px 1px rgba(0,0,0,0.12), -1px 0 0 rgba(0,0,0,0.03), 1px 0 0 rgba(0,0,0,0.03), 0 1px 0 rgba(0,0,0,0.1)
     -moz-box-shadow 0 1px 1px rgba(0,0,0,0.12), -1px 0 0 rgba(0,0,0,0.03), 1px 0 0 rgba(0,0,0,0.03), 0 1px 0 rgba(0,0,0,0.1)
     box-shadow 0 1px 1px rgba(0,0,0,0.12), -1px 0 0 rgba(0,0,0,0.03), 1px 0 0 rgba(0,0,0,0.03), 0 1px 0 rgba(0,0,0,0.1)
 
-  cr-editor-bar-controls
-    display flex
-    flex 1
-
-  cr-editor-bar-controls > *
-    display flex
-    flex 1
-
-  cr-editor-bar-controls.right
+  .cr-EditorBar-controls--right
     justify-content flex-end
 
-  cr-editor-bar-controls > button,
-  cr-editor-bar-controls > input,
-  cr-editor-bar-controls > select,
-  cr-editor-bar-controls > label
+  .cr-EditorBar-controls > button,
+  .cr-EditorBar-controls > input,
+  .cr-EditorBar-controls > select,
+  .cr-EditorBar-controls > label
     border 0
     display inline-block
     font-size 1em
@@ -33,59 +25,69 @@
     outline 0
     padding 5px
 
-  cr-editor-bar-controls > select,
-  cr-editor-bar-controls > input
-    background #f4f4f4
+  .cr-EditorBar-controls > select,
+  .cr-EditorBar-controls > input
+    background-color #f4f4f4
     
-  cr-editor-bar-controls > select
+  .cr-EditorBar-controls > select
     cursor pointer
   
-  cr-editor-bar-controls > select:hover,
-  cr-editor-bar-controls > select:focus
-    background #fafafa
+  .cr-EditorBar-controls > select:hover,
+  .cr-EditorBar-controls > select:focus
+    background-color #fafafa
 
-  cr-editor-bar-controls > input[type=checkbox]
+  .cr-EditorBar-controls > input[type=checkbox]
     position absolute
 
-  cr-editor-bar-controls > button
+  .cr-EditorBar-controls > button
     flex-grow 0
     flex-basis auto
-    background #aaa
+    background-color #aeaeae
     color #fff
     padding 0 8px
     transition all ease-out 225ms
     &:hover
-      background #bbb
+      background-color #bbb
 
-  cr-editor-bar-controls > button.is-active
-    background #0084c5;
+  .cr-EditorBar-controls > button.is-active
+    background-color #0084c5;
 
-  cr-editor-bar-controls > button.is-active:hover
-    background #51baed !important
+  .cr-EditorBar-controls > button.is-active:hover
+    background-color #2699D1 !important
+    
+  .cr-EditorBar-controls > button.is-inactive
+    background-color #ccc
+    cursor auto
 
-  cr-editor-bar-controls > input[type=text]
-    background #fff !important
+  .cr-EditorBar-controls > input[type=text]
+    background-color #fff !important
     border-right 1px solid #eee
     width 8em
-
-  cr-editor-bar-controls > input[type=text]:hover,
-  cr-editor-bar-controls > input[type=text]:focus
-    border-bottom 2px solid #a7adba
+    
+  .cr-EditorBar-controls > label > *
+    vertical-align middle
+    padding-right 0.25em
 </style>
 
 <template>
-  <cr-editor-bar-controls class="left">
+  <cr-panel grow="2" class="cr-EditorBar-controls cr-EditorBar-controls--left">
     <input type="text" class="cr-CodeEditorBar-name" v-racer-model="editor.$model : name" v-live-text="editor.name" />
     <select v-el="select" v-racer-model="editor.$model : mode" v-model="editor.mode">
       <option value="text/html">html</option>
       <option value="text/javascript">js</option>
       <option value="text/css">css</option>
     </select>
-    <label v-show="isJS">Main<input type="checkbox" v-show="isJS" v-model="isMain" /></label>
-  </cr-editor-bar-controls>
-  <cr-editor-bar-controls class="right">
-    <button v-attr="disabled: !hasJS" v-class="is-active: hasJS && room.main" v-on="click: runClicked">Run</button>
-  </cr-editor-bar-controls>
+    <label v-show="isJS">
+      <span>Main</span>
+      <input type="checkbox" v-show="isJS" v-model="isMain" />
+    </label>
+  </cr-panel>
+  <cr-panel grow="0" basis="auto" class="cr-EditorBar-controls cr-EditorBar-controls--right">
+    <button v-on="click: toggleSettings">
+      <cr-icon type="cog"></cr-icon>
+    </button>
+    <button v-attr="disabled: !hasJS" v-class="is-active: hasJS && room.main, is-inactive: !hasJS || !room.main" v-on="click: runClicked">Run</button>
+  </cr-panel>
 </template>
 
 <script>
@@ -93,6 +95,18 @@
   var lang = require('../lang');
 
   module.exports = {
+    data: function () {
+      return {
+        settingsVisible: false,
+        editor: {},
+        room: {},
+        meta: {}
+      };
+    },
+    components: {
+      'cr-icon': require('./cr-icon.vue'),
+      'cr-panel': require('./cr-panel.vue')
+    },
     props: ['editor', 'room', 'meta'],
     computed: {
       isMain: {
@@ -118,6 +132,9 @@
     methods: {
       runClicked: function (e) {
         this.$dispatch('run', this);
+      },
+      toggleSettings: function (e) {
+        this.$dispatch('settings:toggle');
       }
     }
   };

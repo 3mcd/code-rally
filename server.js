@@ -20,7 +20,7 @@ var store = racer.createStore({
 
 app = express();
 app
-  .use(express.favicon())
+  .use(express.favicon ())
   .use(express.compress())
   .use(express.static(process.cwd() + '/public'))
   .use(racerBrowserChannel(store))
@@ -29,7 +29,7 @@ app
 
 app.use('/cm', express.static(process.cwd() + '/node_modules/codemirror/'));
 
-app.use(function(err, req, res, next) {
+app.use(function (err, req, res, next) {
   console.error(err.stack || (new Error(err)).stack);
   res.send(500, 'Something broke!');
 });
@@ -46,7 +46,7 @@ function scriptBundle(path, cb) {
     transform: stringify({
       extensions: ['.html'], minify: true
     })
-  }, function(err, js) {
+  }, function (err, js) {
     if (err) return cb(err);
     jsCache[path] = js;
     cb(null, js);
@@ -58,8 +58,8 @@ app.get('/normalize.css', function (req, res, next) {
   res.send(fs.readFileSync(__dirname + '/node_modules/normalize.css/normalize.css'));
 });
 
-app.get('/client.js', function(req, res, next) {
-  scriptBundle(__dirname + '/apps/client/index.js', function(err, js) {
+app.get('/client.js', function (req, res, next) {
+  scriptBundle(__dirname + '/apps/client/index.js', function (err, js) {
     if (err) return next(err);
     res.type('js');
     res.send(js);
@@ -82,7 +82,7 @@ app.get('/render/:roomId', function (req, res, next) {
   res.send(html);
 });
 
-app.get('/model/rooms/:roomId', function(req, res, next) {
+app.get('/model/rooms/:roomId', function (req, res, next) {
   var model = req.getModel();
   var roomId = req.params.roomId;
   
@@ -90,7 +90,7 @@ app.get('/model/rooms/:roomId', function(req, res, next) {
 
   var $room = model.at('rooms.' + roomId);
 
-  model.subscribe($room, function(err) {
+  model.subscribe($room, function (err) {
     if (err) return next(err);
 
     var scoped = model.ref('_page.room', $room);
@@ -103,19 +103,19 @@ app.get('/model/rooms/:roomId', function(req, res, next) {
       });
     }
 
-    model.bundle(function(err, bundle) {
+    model.bundle(function (err, bundle) {
       if (err) return next(err);
       res.send(JSON.stringify(bundle));
     });
   });
 });
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
   res.sendfile(__dirname + '/public/client.html');
 });
 
 var port = process.env.PORT || 51893;
 
-http.createServer(app).listen(port, function() {
+http.createServer(app).listen (port, function () {
   console.log('Go to http://localhost:' + port);
 });

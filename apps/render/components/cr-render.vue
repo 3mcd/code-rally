@@ -46,6 +46,10 @@
     },
     methods: {
       jsUpdate: function () {
+        if (!this.room.main) {
+          return;
+        }
+        
         var _this = this;
 
         var loaderId = 'loader$' + uuid(); 

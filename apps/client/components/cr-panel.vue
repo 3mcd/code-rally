@@ -5,6 +5,7 @@
 
   cr-panel > component
     flex 1
+    display: flex
 </style>
 
 <template>

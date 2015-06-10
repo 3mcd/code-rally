@@ -5,21 +5,28 @@
     display table
 
   cr-tabs > button
-    background #aaa
+    background-color #aaa
     border 0
     color #fff
     font-weight 200
     outline 0
     &:hover
-      background #bbb
+      background-color #bbb
     &:last-child
       margin-left 3px
 
   cr-tabs > button.is-active
-    background #e9e9e9
+    background-color #e9e9e9
     color #0084c5
     margin-top -2px
     border-top 2px solid #0084c5
+    
+  cr-tabs > button.is-important
+    margin-top -2px
+    border-top 2px solid #2fbcb2
+
+  cr-tabs > button.is-important.is-active
+    color #2fbcb2
 
   cr-tabs > button.is-active + button.is-active
     padding-left 0
@@ -29,8 +36,8 @@
 
 <template>
   <template v-repeat="tabs">
-    <button v-on="click: change(ref)" v-class="is-active: ref == active">{{name}}.{{ext}}</button>
-    <button v-on="click: removeTab(ref)" v-if="ref == active" v-class="is-active: ref == active">x</button>
+    <button v-on="click: change(ref)" v-class="is-active: ref == active, is-important: important">{{name}}.{{ext}}</button>
+    <button v-on="click: removeTab(ref)" v-if="ref == active" v-class="is-active: ref == active, is-important: important">x</button>
   </template>
   <button v-on="click: addTab">+</button>
 </template>

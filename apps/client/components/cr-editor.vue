@@ -21,20 +21,61 @@
 
   .CodeMirror-scroll
     flex 1
+    
+  .CodeMirror-gutters
+    height 100% !important
 
   cr-editor
     width 100%
     display flex
     flex-direction column
     flex 1
+    
+  .cr-Editor-settings
+    flex 0
+    flex-basis 0px
+    right 0
+    top 100%
+    background-color #2D2B38
+    color #fff
+    opacity 0
+    
+  .cr-Editor-settings.is-active
+    opacity 1
+    flex 1
+    
+  .cr-Editor-settings > ul
+    display table
+    margin 0
+    padding 0
+    list-style-type none
+    width 100%
+    padding 1em 0.5em
+    
+  .cr-Editor-settings > ul > li
+    display table-row
+    
+  .cr-Editor-settings > ul > li > *
+    display table-cell
+    vertical-align middle
 </style>
 
 <template>
-  <cr-panel grow="0" basis="30px">
+  <cr-panel flex="0 0 30px">
     <cr-editor-bar editor="{{editor}}" room="{{room}}" meta="{{meta}}"></cr-editor-bar>
   </cr-panel>
-  <cr-panel grow="1" align="stretch" direction="column">
-    <textarea v-el="editor">{{editor.text}}</textarea>
+  <cr-panel direction="row" flex="1">
+    <cr-panel grow="1" basis="200px" align="stretch" direction="column">
+      <textarea v-el="editor">{{editor.text}}</textarea>
+    </cr-panel>
+    <div class="cr-Editor-settings" v-class="is-active: settings.visible">
+      <ul>
+        <li>
+          <label>Reload on run</label>
+          <input type="checkbox" v-racer-model="room.$model : reload" v-model="room.reload" />
+        </li>
+      </ul>
+    </div>
   </cr-panel>
 </template>
 
@@ -47,6 +88,16 @@
       'cr-editor-bar': require('./cr-editor-bar.vue')
     },
     props: ['editor', 'room', 'meta'],
+    data: function () {
+      return {
+        settings: {
+          visible: false
+        },
+        editor: {},
+        room: {},
+        meta: {}
+      };
+    },
     methods: {
       check: function () {
         var _this = this;
@@ -134,14 +185,21 @@
       this.updateMode(this.editor.mode);
 
       _.bindAll(this, 'cmModelHandler', 'cmDomHandler');
+
       this.$watch('editor.mode', this.onModeChange);
       this.editor.$model.on('change', 'text', this.cmModelHandler);
+
       cm.on('change', this.cmDomHandler);
     },
     detached: function () {
       // Throws an error (why?):
       // this.editor.$model.removeListener('change', this.cmModelHandler);
       this.cm.off('change', this.cmDomHandler);
+    },
+    events: {
+      'settings:toggle': function () {
+        this.settings.visible = !this.settings.visible;
+      }
     }
   };
 </script>

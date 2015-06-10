@@ -5,50 +5,22 @@
   cr-room-editors
     position relative
     z-index 10
-    
-  cr-room-options
-    display block
-    color #fff
-    margin-bottom 1em
-
-  cr-room-options > ul
-    list-style-type none
-    margin 0
-    padding 0
-    
-  cr-room-options ul > li
-    background #aaa
-    display inline-block
-    padding 3px
-    width auto
-    
-  cr-room-options > ul > li > *
-    vertical-align middle
 </style>
 
 <template>
-  <h3>{{room.name}}</h3>
-  <cr-room-options>
-    <ul>
-      <li>
-        <label>Reload on run</label>
-        <input type="checkbox" v-racer-model="room.$model : reload" v-model="room.reload" />
-      </li>
-    </ul>
-  </cr-room-options>
-  <cr-panel wrap="wrap" align="stretch">
-    <cr-panel grow="1" basis="400px" direction="column">
-      <cr-panel flex="0">
-        <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
-      </cr-panel>
-      <cr-panel align="stretch">
+  <cr-panel direction="column">
+    <cr-panel flex="0 0 auto">
+      <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
+    </cr-panel>
+    <cr-panel wrap="wrap" align="stretch">
+      <cr-panel grow="2" direction="column">
         <template v-repeat="editor: room.editors">
           <cr-editor editor="{{editor}}" room="{{room}}" meta="{{meta}}" v-if="editor == meta.active"></cr-code-editor>
         </template>
       </cr-panel>
-    </cr-panel>
-    <cr-panel grow="2" basis="500px">
-      <cr-render room="{{room}}"></cr-render>
+      <cr-panel grow="3">
+        <cr-render room="{{room}}"></cr-render>
+      </cr-panel>
     </cr-panel>
   </cr-panel>
 </template>
@@ -112,7 +84,8 @@
           return {
             ref: x,
             name: x.name,
-            ext: lang.find(_this.meta.langs, x.mode).ext
+            ext: lang.find(_this.meta.langs, x.mode).ext,
+            important: _this.room.main == x.id
           };
         });
       }
@@ -150,7 +123,7 @@
         service
           .get('rooms/' + newVal)
           .then(function (model) {
-            _this.room = proxy(model.at('_page.room'));
+            _this.room = window.room = proxy(model.at('_page.room'));
             setTimeout(function () {
               _this.meta.active = _this.room.editors[0];
             }, 0);
