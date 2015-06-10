@@ -89,12 +89,8 @@ app.get('/model/rooms/:roomId', function(req, res, next) {
   if (!/^[a-zA-Z0-9_-]+$/.test(roomId)) return next();
 
   var $room = model.at('rooms.' + roomId);
-  
-  var $editors = model.query('editors', {
-    'roomId': $room.get('name')
-  });
 
-  model.subscribe($room, $editors, function(err) {
+  model.subscribe($room, function(err) {
     if (err) return next(err);
 
     var scoped = model.ref('_page.room', $room);
@@ -102,11 +98,10 @@ app.get('/model/rooms/:roomId', function(req, res, next) {
     if (!scoped.get()) {
       scoped.set({
         name: roomId,
-        reload: false
+        reload: false,
+        editors: []
       });
     }
-
-    model.ref('_page.editors', $editors);
 
     model.bundle(function(err, bundle) {
       if (err) return next(err);

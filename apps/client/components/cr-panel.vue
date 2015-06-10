@@ -21,7 +21,7 @@
     },
     methods: {
       updateFlex: function (value) {
-        var props = value.split(' ');
+        var props = value.toString().split(' ');
         this.grow = props[0] || this.grow;
         this.shrink = props[1] || this.shrink;
         this.basis = props[2] || this.basis;
@@ -53,7 +53,7 @@
       shrink: 'updateShrink',
       wrap: 'updateWrap',
       flex: 'updateFlex',
-      'align': 'updateAlign'
+      align: 'updateAlign'
     }
   };
 </script>

@@ -3,15 +3,17 @@
 </style>
 
 <template>
-  <style v-repeat="editors | filterBy 'text/css' in 'mode'">
+  <style v-repeat="room.editors | filterBy 'text/css' in 'mode'">
     {{{text}}}
   </style>
-  <template v-repeat="editors | filterBy 'text/html' in 'mode'">
+  <template v-repeat="room.editors | filterBy 'text/html' in 'mode'">
     {{{text}}}
   </template>
 </template>
 
 <script type="text/javascript">
+  var _ = require('lodash');
+  
   function uuid() {
       var d = new Date().getTime();
       return 'xxxxxxx'.replace(/[xy]/g, function(c) {
@@ -34,7 +36,7 @@
     },
     computed: {
       js: function () {
-        return this.editors.filter(function (x) {
+        return this.room.editors.filter(function (x) {
           return x.mode == 'text/javascript';
         });
       }
@@ -44,6 +46,8 @@
     },
     methods: {
       jsUpdate: function () {
+        var _this = this;
+
         var loaderId = 'loader$' + uuid(); 
         var injected = Array.prototype.slice.call(document.querySelectorAll('[data-injected]'));
 
@@ -68,7 +72,7 @@
           g.text += '  });\n\n'
         }
 
-        g.text += loaderId + '.require("' + this.room.main + '");\n\n';
+        g.text += loaderId + '.require("' + _.find(this.room.editors, function (x) { return x.id == _this.room.main; }).name + '");\n\n';
 
         g.text += '}(new window.Loader()));\n';
 

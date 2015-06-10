@@ -84,7 +84,7 @@
     <label v-show="isJS">Main<input type="checkbox" v-show="isJS" v-model="isMain" /></label>
   </cr-editor-bar-controls>
   <cr-editor-bar-controls class="right">
-    <button v-attr="disabled: !room.hasJS" v-class="is-active: room.hasJS && room.main" v-on="click: runClicked">Run</button>
+    <button v-attr="disabled: !hasJS" v-class="is-active: hasJS && room.main" v-on="click: runClicked">Run</button>
   </cr-editor-bar-controls>
 </template>
 
@@ -97,11 +97,17 @@
     computed: {
       isMain: {
         get: function () {
-          return this.room.main == this.editor;
+          return this.room.main == this.editor.id;
         },
         set: function (checked) {
-          this.$dispatch('main', checked ? this.editor : null);
+          this.$dispatch('main', checked ? this.editor.id : null);
         }
+      },
+      hasJS: function () {
+        var _this = this;
+        return _.any(this.room.editors, function (x) {
+          return x.mode == lang.find(_this.meta.langs, 'js').mime;
+        });
       },
       isJS: {
         get: function () {

@@ -8,6 +8,7 @@
  * @return {Object}        Proxy object
  */
 function modelProxy(model, path) {
+  var _this = this;
   /**
    * Determine scoped model if a model path was supplied.
    */
