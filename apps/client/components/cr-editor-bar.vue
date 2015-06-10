@@ -75,8 +75,8 @@
 
 <template>
   <cr-editor-bar-controls class="left">
-    <input type="text" class="cr-CodeEditorBar-name" v-racer-sync="editor.$model : name" v-live-text="editor.name" />
-    <select v-el="select" v-racer-sync="editor.$model : mode" v-model="editor.mode">
+    <input type="text" class="cr-CodeEditorBar-name" v-racer-model="editor.$model : name" v-live-text="editor.name" />
+    <select v-el="select" v-racer-model="editor.$model : mode" v-model="editor.mode">
       <option value="text/html">html</option>
       <option value="text/javascript">js</option>
       <option value="text/css">css</option>

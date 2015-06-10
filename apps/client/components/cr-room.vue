@@ -32,7 +32,7 @@
     <ul>
       <li>
         <label>Reload on run</label>
-        <input type="checkbox" v-racer-sync="room.$model : reload" v-model="room.reload" />
+        <input type="checkbox" v-racer-model="room.$model : reload" v-model="room.reload" />
       </li>
     </ul>
   </cr-room-options>
