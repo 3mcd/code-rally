@@ -39,10 +39,14 @@
     background-color #2D2B38
     color #fff
     opacity 0
+    display none
+    visibility hidden
     
   .cr-Editor-settings.is-active
     opacity 1
     flex 1
+    visibility visible
+    display block
     
   .cr-Editor-settings > ul
     display table
@@ -179,7 +183,8 @@
         extraKeys: {
           'Tab': function (cm) { cm.execCommand('insertSoftTab'); }
         },
-        theme: 'code-rally'
+        theme: 'code-rally',
+        lineWrapping: true
       });
 
       this.updateMode(this.editor.mode);

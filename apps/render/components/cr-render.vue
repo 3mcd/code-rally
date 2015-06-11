@@ -46,7 +46,7 @@
     },
     methods: {
       jsUpdate: function () {
-        if (!this.room.main) {
+        if (!this.room.main || this.js.length == 0) {
           return;
         }
         

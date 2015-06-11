@@ -19,7 +19,6 @@
     font-size inherit
     height 100%
     width 100%
-    overflow hidden
     display flex
 
   cr-app *, cr-app *:before, cr-app *:after {

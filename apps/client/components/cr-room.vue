@@ -13,12 +13,12 @@
       <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
     </cr-panel>
     <cr-panel wrap="wrap" align="stretch">
-      <cr-panel grow="2" direction="column">
+      <cr-panel grow="2" basis="300px" direction="column">
         <template v-repeat="editor: room.editors">
           <cr-editor editor="{{editor}}" room="{{room}}" meta="{{meta}}" v-if="editor == meta.active"></cr-code-editor>
         </template>
       </cr-panel>
-      <cr-panel grow="3">
+      <cr-panel grow="5" basis="200px">
         <cr-render room="{{room}}"></cr-render>
       </cr-panel>
     </cr-panel>
@@ -102,6 +102,7 @@
             text: '',
             id: this.room.editors.$model.id()
           });
+        console.log('add tab');
         this.meta.active = _.last(this.room.editors);
       },
       'tab:change': function (ref) {

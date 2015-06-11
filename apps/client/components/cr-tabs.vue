@@ -18,11 +18,9 @@
   cr-tabs > button.is-active
     background-color #e9e9e9
     color #0084c5
-    margin-top -2px
     border-top 2px solid #0084c5
     
   cr-tabs > button.is-important
-    margin-top -2px
     border-top 2px solid #2fbcb2
 
   cr-tabs > button.is-important.is-active
