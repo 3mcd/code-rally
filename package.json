@@ -27,7 +27,8 @@
     "stylus": "^0.51.1",
     "superagent": "^1.2.0",
     "vue": "^0.12.0",
-    "vueify": "^1.1.5"
+    "vueify": "^1.1.5",
+    "vue-panel": "*"
   },
   "author": {
     "name": "Eric McDaniel",

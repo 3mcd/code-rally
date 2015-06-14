@@ -17,10 +17,13 @@
     -moz-osx-font-smoothing grayscale
 </style>
 
-<template>{{type}}</template>
+<template>
+    <cr-icon v-text="type"></cr-icon>
+</template>
 
 <script>
   module.exports = {
-    props: ['type']
+    props: ['type'],
+    replace: true
   };
 </script>

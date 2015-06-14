@@ -1,11 +1,7 @@
 <style lang="stylus">
   @font-face {
-      font-family: 'Bitstream Vera Sans Mono';
-      src: url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.eot');
-      src: url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.eot?#iefix') format('embedded-opentype'),
-           url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.woff') format('woff'),
-           url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.ttf') format('truetype'),
-           url('/fonts/bitstream-vera-sans-mono/VeraMono-webfont.svg#Bitstream Vera Sans Mono') format('svg');
+      font-family: 'M+ 1m regular';
+      src: url('/fonts/m+ 1m/mplus-1m-regular.ttf') format('truetype');
       font-weight: normal;
       font-style: normal;
   }
@@ -15,7 +11,7 @@
     display flex
     flex-direction column
     height 100%
-    font-family "Bitstream Vera Sans Mono"
+    font-family "M+ 1m regular"
     font-size 0.9em
     -webkit-font-smoothing antialiased
 
@@ -30,17 +26,19 @@
     display flex
     flex-direction column
     flex 1
+    position relative
     
   .cr-Editor-settings
-    flex 0
-    flex-basis 0px
-    right 0
-    top 100%
-    background-color #2D2B38
+    background-color rgba(0,0,0,0.7)
     color #fff
     opacity 0
     display none
     visibility hidden
+    position absolute
+    right 0
+    z-index 100
+    font-size 0.7em
+    min-width 180px
     
   .cr-Editor-settings.is-active
     opacity 1
@@ -54,33 +52,37 @@
     padding 0
     list-style-type none
     width 100%
-    padding 1em 0.5em
     
   .cr-Editor-settings > ul > li
     display table-row
+    cursor pointer
     
   .cr-Editor-settings > ul > li > *
     display table-cell
     vertical-align middle
+    padding 1em
+    margin 1em 0 1em 1em
 </style>
 
 <template>
-  <cr-panel flex="0 0 30px">
-    <cr-editor-bar editor="{{editor}}" room="{{room}}" meta="{{meta}}"></cr-editor-bar>
-  </cr-panel>
-  <cr-panel direction="row" flex="1">
-    <cr-panel grow="1" basis="200px" align="stretch" direction="column">
-      <textarea v-el="editor">{{editor.text}}</textarea>
-    </cr-panel>
-    <div class="cr-Editor-settings" v-class="is-active: settings.visible">
-      <ul>
-        <li>
-          <label>Reload on run</label>
-          <input type="checkbox" v-racer-model="room.$model : reload" v-model="room.reload" />
-        </li>
-      </ul>
-    </div>
-  </cr-panel>
+  <cr-editor>
+    <v-panel-bar size="2em">
+      <cr-editor-bar editor="{{editor}}" room="{{room}}" meta="{{meta}}"></cr-editor-bar>
+    </v-panel-bar>
+    <v-panel direction="row" grow="1">
+      <v-panel grow="1" basis="200px" align="stretch" direction="column">
+        <textarea v-el="editor">{{editor.text}}</textarea>
+      </v-panel>
+      <div class="cr-Editor-settings" v-class="is-active: settings.visible">
+        <ul>
+          <li>
+            <label for="reload-on-run">Reload on run</label>
+            <input id="reload-on-run" type="checkbox" v-racer-model="room.$model : reload" v-model="room.reload" />
+          </li>
+        </ul>
+      </div>
+    </v-panel>
+  </cr-editor>
 </template>
 
 <script>
@@ -88,6 +90,7 @@
   var CodeMirror = require('codemirror');
 
   module.exports = {
+    replace: true,
     components: {
       'cr-editor-bar': require('./cr-editor-bar.vue')
     },

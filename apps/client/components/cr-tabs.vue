@@ -4,29 +4,32 @@
     z-index 1
     display table
 
-  cr-tabs > button
+  cr-tabs > a
     background-color #aaa
     border 0
     color #fff
     font-weight 200
     outline 0
+    transition none
+    cursor pointer
+    padding 0 0.4em
     &:hover
       background-color #bbb
     &:last-child
       margin-left 3px
 
-  cr-tabs > button.is-active
+  cr-tabs > a.is-selected
     background-color #e9e9e9
     color #0084c5
     border-top 2px solid #0084c5
     
-  cr-tabs > button.is-important
+  cr-tabs > a.is-important
     border-top 2px solid #2fbcb2
 
-  cr-tabs > button.is-important.is-active
+  cr-tabs > a.is-important.is-selected
     color #2fbcb2
 
-  cr-tabs > button.is-active + button.is-active
+  cr-tabs > a.is-selected + a.is-selected
     padding-left 0
     &:hover
       color #ff0040
@@ -34,10 +37,10 @@
 
 <template>
   <template v-repeat="tabs">
-    <button v-on="click: change(ref)" v-class="is-active: ref == active, is-important: important">{{name}}.{{ext}}</button>
-    <button v-on="click: removeTab(ref)" v-if="ref == active" v-class="is-active: ref == active, is-important: important">x</button>
+    <a v-on="click: change(ref)" v-class="is-selected: ref == active, is-important: important">{{name}}.{{ext}}</a>
+    <a v-on="click: removeTab(ref)" v-if="ref == active" v-class="is-selected: ref == active, is-important: important">x</a>
   </template>
-  <button v-on="click: addTab">+</button>
+  <a v-on="click: addTab">+</a>
 </template>
 
 <script>
@@ -48,7 +51,6 @@
     data: function () {
       return {
         active: null,
-        previous: null,
         tabs: [],
         history: []
       };
@@ -58,13 +60,23 @@
         this.$dispatch('tab:add', this);
       },
       removeTab: function (ref) {
+        var _this = this;
+
+        var selected = _.find(this.tabs, function (x) {
+          return x.ref == ref;
+        });
+
+        var selectedIndex = this.tabs.indexOf(selected);
+
         this.history = _.filter(this.history, function (x) {
           return x !== ref;
         });
+
         this.$dispatch('tab:remove', ref);
-        this.$dispatch('tab:change', this.history.length > 0 ? this.history.pop() : _.find(this.tabs, function (x) {
-          return x !== ref;
-        }));
+        this.$dispatch('tab:change', this.tabs[selectedIndex - 1].ref);
+        // this.$dispatch('tab:change', this.history.length > 0 ? this.history.pop() : _.find(this.tabs, function (x) {
+        //   return x !== ref;
+        // }));
       },
       change: function (ref) {
         this.$dispatch('tab:change', ref);

@@ -1,28 +1,63 @@
 <style lang="stylus">
   cr-room
     height 100%
-    
-  cr-room-editors
+  
+  .cr-Room-editors
     position relative
-    z-index 10
+    z-index 99
+    -webkit-box-shadow 1px 1px 1px rgba(0,0,0,0.10)
+    -moz-box-shadow 1px 1px 1px rgba(0,0,0,0.10)
+    box-shadow 1px 1px 1px rgba(0,0,0,0.10)
+
+  .cr-Room-title
+    font-size 1em
+    margin 0
+    height 100%
+    line-height 30px
+    font-weight 200
+    
+  .cr-Room-render
+    flex-grow 0
+    flex-basis 30px
+    flex-shrink 0
+    
+  .cr-Room-render.is-active
+    flex-grow 5
+    flex-basis 200px
+  
+  .cr-Room-renderBar
+    background-color #e9e9e9
+
+  .cr-Room-title
+    padding-left 4px
 </style>
 
 <template>
-  <cr-panel direction="column">
-    <cr-panel flex="0 0 auto">
-      <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
-    </cr-panel>
-    <cr-panel wrap="wrap" align="stretch">
-      <cr-panel grow="2" basis="300px" direction="column">
-        <template v-repeat="editor: room.editors">
-          <cr-editor editor="{{editor}}" room="{{room}}" meta="{{meta}}" v-if="editor == meta.active"></cr-code-editor>
-        </template>
-      </cr-panel>
-      <cr-panel grow="5" basis="200px">
+  <v-panel-bar size="auto">
+    <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
+  </v-panel-bar>
+  <v-panel grow="1" wrap="wrap" align-items="stretch">
+    <v-panel grow="2" basis="300px" direction="column" class="cr-Room-editors">
+      <template v-repeat="editor: room.editors">
+        <cr-editor editor="{{editor}}" room="{{room}}" meta="{{meta}}" v-if="editor == meta.active"></cr-editor>
+      </template>
+    </v-panel>
+    <v-panel class="cr-Room-render" v-class="is-active: meta.render.visible" direction="column">
+      <v-panel-bar class="cr-Room-renderBar" size="2em">
+        <v-panel grow="2">
+          <h2 v-show="meta.render.visible" class="cr-Room-title">rooms/{{room.name}}</h2>
+        </v-panel>
+        <v-panel grow="0">
+          <button v-on="click: meta.render.visible = !meta.render.visible">
+            <cr-icon type="{{meta.render.visible ? 'left4' : 'right4'}}"></cr-icon>
+          </button>
+        </v-panel>
+      </v-panel-bar>
+      <v-panel grow="1">
         <cr-render room="{{room}}"></cr-render>
-      </cr-panel>
-    </cr-panel>
-  </cr-panel>
+      </v-panel>
+    </v-panel>
+  </v-panel>
 </template>
 
 <script>
@@ -53,10 +88,9 @@
     props: ['params'],
     components: {
       'cr-editor': require('./cr-editor.vue'),
-      'cr-panel': require('./cr-panel.vue'),
-      'cr-panels': require('./cr-panels.vue'),
       'cr-render': require('./cr-render.vue'),
-      'cr-tabs': require('./cr-tabs.vue')
+      'cr-tabs': require('./cr-tabs.vue'),
+      'cr-icon': require('./cr-icon.vue')
     },
     data: function () {
       return {
@@ -73,7 +107,10 @@
           langs: langs,
           loaded: false,
           active: null,
-          previous: null
+          previous: null,
+          render: {
+            visible: true
+          }
         }
       }
     },
@@ -144,6 +181,7 @@
     watch: {
       'params.room': 'roomUpdate',
       'meta.active': 'activeUpdate'
-    }
+    },
+    replace: true
   };
 </script>
