@@ -34,7 +34,7 @@
 
 <template>
   <cr-spinner v-if="!meta.loaded"></cr-spinner>
-  <v-panel v-if="meta.loaded" direction="column">
+  <v-panel grow="1" v-if="meta.loaded" direction="column">
     <v-panel-bar size="auto">
       <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
     </v-panel-bar>
