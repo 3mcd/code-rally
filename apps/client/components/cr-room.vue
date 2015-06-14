@@ -33,28 +33,31 @@
 </style>
 
 <template>
-  <v-panel-bar size="auto">
-    <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
-  </v-panel-bar>
-  <v-panel grow="1" wrap="wrap" align-items="stretch">
-    <v-panel grow="2" basis="300px" direction="column" class="cr-Room-editors">
-      <template v-repeat="editor: room.editors">
-        <cr-editor editor="{{editor}}" room="{{room}}" meta="{{meta}}" v-if="editor == meta.active"></cr-editor>
-      </template>
-    </v-panel>
-    <v-panel class="cr-Room-render" v-class="is-active: meta.render.visible" direction="column">
-      <v-panel-bar class="cr-Room-renderBar" size="2em">
-        <v-panel grow="2">
-          <h2 v-show="meta.render.visible" class="cr-Room-title">rooms/{{room.name}}</h2>
+  <cr-spinner v-if="!meta.loaded"></cr-spinner>
+  <v-panel v-if="meta.loaded" direction="column">
+    <v-panel-bar size="auto">
+      <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
+    </v-panel-bar>
+    <v-panel grow="1" wrap="wrap" align-items="stretch">
+      <v-panel grow="2" basis="300px" direction="column" class="cr-Room-editors">
+        <template v-repeat="editor: room.editors">
+          <cr-editor editor="{{editor}}" room="{{room}}" meta="{{meta}}" v-if="editor == meta.active"></cr-editor>
+        </template>
+      </v-panel>
+      <v-panel class="cr-Room-render" v-class="is-active: meta.render.visible" direction="column">
+        <v-panel-bar class="cr-Room-renderBar" size="2em">
+          <v-panel grow="2">
+            <h2 v-show="meta.render.visible" class="cr-Room-title">rooms/{{room.name}}</h2>
+          </v-panel>
+          <v-panel grow="0">
+            <button v-on="click: meta.render.visible = !meta.render.visible">
+              <cr-icon type="{{meta.render.visible ? 'left4' : 'right4'}}"></cr-icon>
+            </button>
+          </v-panel>
+        </v-panel-bar>
+        <v-panel grow="1">
+          <cr-render room="{{room}}"></cr-render>
         </v-panel>
-        <v-panel grow="0">
-          <button v-on="click: meta.render.visible = !meta.render.visible">
-            <cr-icon type="{{meta.render.visible ? 'left4' : 'right4'}}"></cr-icon>
-          </button>
-        </v-panel>
-      </v-panel-bar>
-      <v-panel grow="1">
-        <cr-render room="{{room}}"></cr-render>
       </v-panel>
     </v-panel>
   </v-panel>
@@ -90,7 +93,8 @@
       'cr-editor': require('./cr-editor.vue'),
       'cr-render': require('./cr-render.vue'),
       'cr-tabs': require('./cr-tabs.vue'),
-      'cr-icon': require('./cr-icon.vue')
+      'cr-icon': require('./cr-icon.vue'),
+      'cr-spinner': require('./cr-spinner.vue')
     },
     data: function () {
       return {
