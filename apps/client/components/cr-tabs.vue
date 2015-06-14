@@ -31,6 +31,7 @@
 
   cr-tabs > a.is-selected + a.is-selected
     padding-left 0
+    padding-right 0.2em
     &:hover
       color #ff0040
       
