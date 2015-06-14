@@ -33,7 +33,7 @@
     font-size 1em
     margin 0
     outline 0
-    padding 0.5em
+    padding 0 0.5em
 
   cr-app select,
   cr-app input
@@ -49,7 +49,6 @@
   cr-app button
     background-color #aeaeae
     color #fff
-    padding 0 0.5em
     transition all ease-out 225ms
     &:hover
       background-color #bbb

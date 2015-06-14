@@ -39,6 +39,7 @@
     z-index 100
     font-size 0.7em
     min-width 50%
+    max-width 180px
     
   .cr-Editor-settings.is-active
     opacity 1
