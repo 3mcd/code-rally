@@ -41,7 +41,7 @@
       <button v-on="click: toggleSettings">
         <cr-icon type="cog"></cr-icon>
       </button>
-      <button v-attr="disabled: !hasJS" v-class="is-active: hasJS && room.main, is-inactive: !hasJS || !room.main" v-on="click: runClicked">Run</button>
+      <button v-attr="disabled: !hasJS" v-class="is-active: canRun, is-inactive: !canRun" v-on="click: runClicked">Run</button>
     </v-panel>
   </cr-editor-bar>
 </template>
@@ -82,11 +82,15 @@
         get: function () {
           return this.editor.mode == lang.find(this.meta.langs, 'js').mime;
         }
+      },
+      canRun: function () {
+        return this.hasJS && this.room.main;
       }
     },
     methods: {
       runClicked: function (e) {
-        this.$dispatch('run', this);
+        if (this.canRun)
+          this.$dispatch('run', this);
       },
       toggleSettings: function (e) {
         this.$dispatch('settings:toggle');
