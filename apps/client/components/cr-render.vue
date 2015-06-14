@@ -19,10 +19,13 @@
   module.exports = {
     data: function () {
       return {
-        loading: true
+        loading: true,
+        room: {}
       }
     },
-    props: ['room'],
+    props: [
+      { name: 'room', type: Object }
+    ],
     ready: function () {
       var _this = this;
       this.$$.render.onload = function () {

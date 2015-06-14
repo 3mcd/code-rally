@@ -18,12 +18,16 @@
 </style>
 
 <template>
-    <cr-icon v-text="type"></cr-icon>
+    <cr-icon>
+      <content></content>{{type}}
+    </cr-icon>
 </template>
 
 <script>
   module.exports = {
-    props: ['type'],
+    props: [
+      { name: 'type', type: String }
+    ],
     replace: true
   };
 </script>

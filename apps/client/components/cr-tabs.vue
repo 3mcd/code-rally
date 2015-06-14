@@ -47,7 +47,9 @@
   var _ = require('lodash');
   
   module.exports = {
-    props: ['tabs'],
+    props: [
+      { name: 'tabs', type: Array }
+    ],
     data: function () {
       return {
         active: null,
@@ -63,20 +65,16 @@
         var _this = this;
 
         var selected = _.find(this.tabs, function (x) {
-          return x.ref == ref;
+          return x.ref === ref;
         });
 
-        var selectedIndex = this.tabs.indexOf(selected);
+        var selectedIndex = this.tabs.indexOf(selected) || 1;
 
         this.history = _.filter(this.history, function (x) {
           return x !== ref;
         });
 
         this.$dispatch('tab:remove', ref);
-        this.$dispatch('tab:change', this.tabs[selectedIndex - 1].ref);
-        // this.$dispatch('tab:change', this.history.length > 0 ? this.history.pop() : _.find(this.tabs, function (x) {
-        //   return x !== ref;
-        // }));
       },
       change: function (ref) {
         this.$dispatch('tab:change', ref);

@@ -84,7 +84,7 @@
         }
       },
       canRun: function () {
-        return this.hasJS && this.room.main;
+        return !!(this.hasJS && this.room.main);
       }
     },
     methods: {

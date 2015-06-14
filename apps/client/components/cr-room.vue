@@ -1,19 +1,17 @@
 <style lang="stylus">
   cr-room
-    height 100%
+    display flex
+    flex-grow 1
   
   .cr-Room-editors
     position relative
     z-index 99
-    -webkit-box-shadow 1px 1px 1px rgba(0,0,0,0.10)
-    -moz-box-shadow 1px 1px 1px rgba(0,0,0,0.10)
-    box-shadow 1px 1px 1px rgba(0,0,0,0.10)
 
   .cr-Room-title
     font-size 1em
     margin 0
     height 100%
-    line-height 30px
+    line-height 2em
     font-weight 200
     
   .cr-Room-render
@@ -30,37 +28,45 @@
 
   .cr-Room-title
     padding-left 4px
+    
+  .cr-Room-instructions
+    color #fff
 </style>
 
 <template>
-  <cr-spinner v-if="!meta.loaded"></cr-spinner>
-  <v-panel grow="1" v-if="meta.loaded" direction="column">
-    <v-panel-bar size="auto">
-      <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
-    </v-panel-bar>
-    <v-panel grow="1" wrap="wrap" align-items="stretch">
-      <v-panel grow="2" basis="300px" direction="column" class="cr-Room-editors">
-        <template v-repeat="editor: room.editors">
-          <cr-editor editor="{{editor}}" room="{{room}}" meta="{{meta}}" v-if="editor == meta.active"></cr-editor>
-        </template>
-      </v-panel>
-      <v-panel class="cr-Room-render" v-class="is-active: meta.render.visible" direction="column">
-        <v-panel-bar class="cr-Room-renderBar" size="2em">
-          <v-panel grow="2">
-            <h2 v-show="meta.render.visible" class="cr-Room-title">rooms/{{room.name}}</h2>
+  <cr-room>
+    <cr-spinner v-if="meta.loading"></cr-spinner>
+    <v-panel grow="1" v-if="!meta.loading" direction="column">
+      <v-panel-bar size="auto">
+        <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
+      </v-panel-bar>
+      <v-panel grow="1" wrap="wrap" align-items="stretch">
+        <v-panel grow="2" basis="300px" direction="column" class="cr-Room-editors">
+          <v-panel v-if="room.editors.length === 0" grow="1">
+            <h2 class="cr-Room-instructions">Add a new editor using the '+' button above</h2>
           </v-panel>
-          <v-panel grow="0">
-            <button v-on="click: meta.render.visible = !meta.render.visible">
-              <cr-icon type="{{meta.render.visible ? 'left4' : 'right4'}}"></cr-icon>
-            </button>
+          <template v-repeat="editor: room.editors">
+            <cr-editor editor="{{editor}}" room="{{room}}" meta="{{meta}}" v-if="editor == meta.active"></cr-editor>
+          </template>
+        </v-panel>
+        <v-panel class="cr-Room-render" v-class="is-active: meta.render.visible" direction="column">
+          <v-panel-bar class="cr-Room-renderBar" size="2em">
+            <v-panel grow="2">
+              <h2 v-show="meta.render.visible" class="cr-Room-title">rooms/{{room.name}}</h2>
+            </v-panel>
+            <v-panel grow="0">
+              <button v-on="click: meta.render.visible = !meta.render.visible">
+                <cr-icon>{{meta.render.visible ? 'write2' : 'tool2'}}</cr-icon>
+              </button>
+            </v-panel>
+          </v-panel-bar>
+          <v-panel grow="1">
+            <cr-render room="{{room}}"></cr-render>
           </v-panel>
-        </v-panel-bar>
-        <v-panel grow="1">
-          <cr-render room="{{room}}"></cr-render>
         </v-panel>
       </v-panel>
     </v-panel>
-  </v-panel>
+  </cr-room>
 </template>
 
 <script>
@@ -88,7 +94,11 @@
   ];
 
   module.exports = {
-    props: ['params'],
+    replace: true,
+    props: [
+      { name: 'room', type: Object },
+      { name: 'params', type: Object }
+    ],
     components: {
       'cr-editor': require('./cr-editor.vue'),
       'cr-render': require('./cr-render.vue'),
@@ -99,19 +109,19 @@
     data: function () {
       return {
         room: {
-          name: null,
-          main: {},
-          reload: false
+          name: '',
+          main: '',
+          reload: false,
+          ts: new Date().getTime() / 1000
         },
-        editors: [],
         params: {
-          room: null
+          room: ''
         },
         meta: {
           langs: langs,
-          loaded: false,
-          active: null,
-          previous: null,
+          loading: true,
+          active: {},
+          activeIndex: 0,
           render: {
             visible: true
           }
@@ -133,17 +143,7 @@
     },
     events: {
       'tab:add': function () {
-        this.room.editors.$model
-          .pass({
-            local: true
-          })
-          .push({
-            name: '(new)',
-            mode: lang.find(this.meta.langs, 'html').mime,
-            text: '',
-            id: this.room.editors.$model.id()
-          });
-        console.log('add tab');
+        this.addRoom();
         this.meta.active = _.last(this.room.editors);
       },
       'tab:change': function (ref) {
@@ -160,6 +160,18 @@
       }
     },
     methods: {
+      addRoom: function () {
+        this.room.editors.$model
+          .pass({
+            local: true
+          })
+          .push({
+            name: '(new)',
+            mode: lang.find(this.meta.langs, 'html').mime,
+            text: '',
+            id: this.room.editors.$model.id()
+          });
+      },
       roomUpdate: function (newVal, oldVal) {
         var _this = this;
         service
@@ -169,23 +181,29 @@
             setTimeout(function () {
               _this.meta.active = _this.room.editors[0];
             }, 0);
-            _this.meta.loaded = true;
+            _this.meta.loading = false;
           });
       },
       activeUpdate: function (newVal, oldVal) {
         this.$.tabs.select(newVal);
-        this.meta.previous = oldVal;
+        this.activeIndex = this.room.editors.indexOf(newVal);
       },
-      findEditor: function (name) {
-        return _.find(this.room.editors, function (x) {
-          return x.name == name;
+      editorsUpdate: function (newVal, oldVal) {
+        var _this = this;
+
+        var selectedPresent = _.any(this.room.editors, function (x) {
+          return x.id === _this.meta.active.id;
         });
+
+        if (!selectedPresent) {
+          _this.meta.active = this.room.editors[(this.activeIndex || 1) - 1];
+        }
       }
     },
     watch: {
+      'room.editors': 'editorsUpdate',
       'params.room': 'roomUpdate',
       'meta.active': 'activeUpdate'
-    },
-    replace: true
+    }
   };
 </script>
