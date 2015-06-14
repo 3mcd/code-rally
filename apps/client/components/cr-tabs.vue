@@ -33,12 +33,18 @@
     padding-left 0
     &:hover
       color #ff0040
+      
+  .cr-Tab-close
+    padding 0
+    font-size 0.6em
 </style>
 
 <template>
   <template v-repeat="tabs">
     <a v-on="click: change(ref)" v-class="is-selected: ref == active, is-important: important">{{name}}.{{ext}}</a>
-    <a v-on="click: removeTab(ref)" v-if="ref == active" v-class="is-selected: ref == active, is-important: important">x</a>
+    <a v-on="click: removeTab(ref)" v-if="ref == active" v-class="is-selected: ref == active, is-important: important">
+      <cr-icon class="cr-Tab-close">cancel</cr-icon>
+    </a>
   </template>
   <a v-on="click: addTab">+</a>
 </template>
