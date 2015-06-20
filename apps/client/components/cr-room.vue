@@ -5,6 +5,7 @@
   
   .cr-Room-editors
     position relative
+    min-width 26em
     z-index 99
 
   .cr-Room-title
@@ -34,14 +35,14 @@
 </style>
 
 <template>
-  <cr-room>
-    <cr-spinner v-if="meta.loading"></cr-spinner>
-    <v-panel grow="1" v-if="!meta.loading" direction="column">
+  <cr-spinner v-if="meta.loading"></cr-spinner>
+  <cr-room v-show="!meta.loading">
+    <v-panel  grow="1" direction="column">
       <v-panel-bar size="auto">
         <cr-tabs tabs="{{tabs}}" v-ref="tabs"></cr-tabs>
       </v-panel-bar>
-      <v-panel grow="1" wrap="wrap" align-items="stretch">
-        <v-panel grow="2" basis="300px" direction="column" class="cr-Room-editors">
+      <v-panel grow="1">
+        <v-panel v-resize="resize" class="cr-Room-editors" basis="400px" direction="column" >
           <v-panel v-if="room.editors.length === 0" grow="1">
             <h2 class="cr-Room-instructions">Add a new editor using the '+' button above</h2>
           </v-panel>
@@ -49,16 +50,9 @@
             <cr-editor editor="{{editor}}" room="{{room}}" meta="{{meta}}" v-if="editor == meta.active"></cr-editor>
           </template>
         </v-panel>
-        <v-panel class="cr-Room-render" v-class="is-active: meta.render.visible" direction="column">
+        <v-panel grow="1" class="cr-Room-render" v-class="is-active: meta.render.visible" direction="column">
           <v-panel-bar class="cr-Room-renderBar" size="2em">
-            <v-panel grow="2">
-              <h2 v-show="meta.render.visible" class="cr-Room-title">rooms/{{room.name}}</h2>
-            </v-panel>
-            <v-panel grow="0">
-              <button v-on="click: meta.render.visible = !meta.render.visible">
-                <cr-icon>{{meta.render.visible ? 'write2' : 'tool2'}}</cr-icon>
-              </button>
-            </v-panel>
+            <h2 v-show="meta.render.visible" class="cr-Room-title">rooms/{{room.name}}</h2>
           </v-panel-bar>
           <v-panel grow="1">
             <cr-render room="{{room}}"></cr-render>
@@ -71,6 +65,11 @@
 
 <script>
   var _ = require('lodash');
+
+  function processHandles(handle) {
+    handle.$el.classList.add('Handle');
+    handle.$el.classList.add('Handle--' + handle.type);
+  }
 
   var lang = require('../lang');
   var proxy = require('../../racer-model-proxy');
@@ -125,6 +124,12 @@
           render: {
             visible: true
           }
+        },
+        resize: {
+          before: processHandles,
+          handles: [
+            { type: 'right' }
+          ]
         }
       }
     },

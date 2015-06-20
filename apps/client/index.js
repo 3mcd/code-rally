@@ -2,6 +2,7 @@ var Vue = require('vue');
 var Router = require('director').Router;
 
 Vue.use(require('vue-panel'));
+Vue.use(require('vue-resize'));
 
 require('./directives');
 require('codemirror/addon/mode/loadmode');

@@ -67,21 +67,64 @@
     background-color #fff !important
     border-right 1px solid #eee
     width 8em
+
+  .Handle
+    z-index 999
+
+  .Handle:before
+    content ''
+    position absolute
+    background-color #ccc
+    
+  .Handle:hover:before
+    background-color #bbb
+
+  .Handle--right,
+  .Handle--left
+    cursor ew-resize
+
+  .Handle--bottom,
+  .Handle--top
+    cursor ns-resize
+
+  .Handle--bottom:before,
+  .Handle--top:before
+    width 100%
+    height 2px
+    top 8px
+
+  .Handle--right:before,
+  .Handle--left:before
+    height 100%
+    width 2px
+    left 7px
+    
+  v-panel
+    overflow auto
 </style>
 
 <template>
   <cr-app>
-    <v-panel grow="1" direction="column">
-      <component is="{{view}}" params="{{params}}"></component>
-    </v-panel>
+    <component is="{{view}}" params="{{params}}"></component>
   </cr-app>
 </template>
 
 <script type="text/javascript">
+  function processHandles(handle) {
+    handle.$el.classList.add('Handle');
+    handle.$el.classList.add('Handle--' + handle.type);
+  }
+
   module.exports = {
     data: {
       view: '',
-      params: {}
+      params: {},
+      test: {
+        before: processHandles,
+        handles: [
+          { type: 'right' }
+        ]
+      }
     },
     components: {
       'room': require('./cr-room.vue')
